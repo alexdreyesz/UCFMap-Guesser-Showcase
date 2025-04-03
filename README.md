@@ -14,7 +14,7 @@ Make sure you have the correct version of node.
 node --version
 ```
 
-You should see: v20.14.0. If you don't have the correct version of node. GET IT! If you install packages you'll probably have to delete the node_modules directory and reinstall everything.
+You should see: v20.14.0. If you don't have the correct version of node. GET IT! If you install packages with the wrong node version you'll probably have to delete the node_modules directory and reinstall everything.
 
 ### Step 2:
 
@@ -24,7 +24,7 @@ WHEN YOU HAVE THE CORRECT VERSION OF NODE, install the dependences:
 npm install
 ```
 
-### Step 3:
+### Step 3: DO NOT SKIP!!! IMPORTANT!
 
 MAKE SURE you are using VS Code and that you have Prettier Installed (`esbenp.prettier-vscode`). If you don't do this, then it will create a lot of problems when you accidentally format someone else's code, completely overwriting their work with your github commit.
 
