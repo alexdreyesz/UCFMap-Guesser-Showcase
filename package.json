@@ -16,7 +16,7 @@
     "dev": "nodemon backend/server.ts",
     "start": "node backend/dist/server.js",
     "build:clean": "rimraf backend/dist && rimraf frontend/dist",
-    "build": "tsc backend/server.ts  --esModuleInterop --moduleResolution node16 --module Node16 --outDir backend/dist/ && vite build",
+    "build": "vite build && tsc backend/server.ts  --esModuleInterop --moduleResolution node16 --module Node16 --outDir backend/dist/",
     "lint": "eslint .",
     "preview": "vite preview"
   },
