@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Starting the application..."
 # Check who the user is
 whoami
