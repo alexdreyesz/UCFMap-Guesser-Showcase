@@ -3,7 +3,7 @@ echo "Starting the application..."
 whoami
 # Make sure we're using the correct bashrc profile
 source ~/.bashrc
-# Use sudo to hopefully get node and npm to run properly
-sudo node --version
-sudo npm install
-# pm2 daemon is running already, that way the app should run fine
+node --version
+npm install
+# restart pm2 daemon just incase new libraries are installed
+pm2 restart all
