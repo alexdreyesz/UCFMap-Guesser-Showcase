@@ -8,6 +8,7 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const app = express();
 
 const base = path.resolve(__dirname, "../frontend");
+const PORT = 80;
 
 // Development mode: Use Vite's middleware for hot module replacement (HMR)
 async function startDevServer() {
@@ -39,8 +40,8 @@ async function startDevServer() {
     }
   });
 
-  app.listen(3000, () => {
-    console.log("Development server running at http://localhost:3000");
+  app.listen(PORT, () => {
+    console.log("Development server running at http://localhost:" + PORT);
   });
 }
 
@@ -55,8 +56,8 @@ function startProdServer() {
     res.sendFile(path.resolve(__dirname, "../dist", "index.html"));
   });
 
-  app.listen(3000, () => {
-    console.log("Production server running at http://localhost:3000");
+  app.listen(PORT, () => {
+    console.log("Production server running at http://localhost" + PORT);
   });
 }
 
