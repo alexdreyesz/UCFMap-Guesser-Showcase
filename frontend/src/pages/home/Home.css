@@ -1,0 +1,9 @@
+.container-ucf-logo {
+  position: absolute;
+  transform:translate(740%, 180%);
+}
+
+.ucf-logo {
+  height: 5rem;
+  width: 5rem;
+}
