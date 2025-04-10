@@ -1,13 +1,10 @@
 import "./Home.css";
-import UCFLogo from "../../assets/icons/ucf-logo.png"
+import Header from "../../components/header/Header"
 
 function App() {
   return (
     <>
-      <div className="container-ucf-logo">
-        <img className="ucf-logo" src={UCFLogo} alt="UCF Logo"/>
-        <p>UCF LOGO</p>
-      </div>
+      <Header/>
     </>
   );
 }
