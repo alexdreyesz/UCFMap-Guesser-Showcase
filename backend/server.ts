@@ -7,6 +7,7 @@ import { createServer as createViteServer } from "vite";
 import { apiRouter } from "./api.js";
 
 config();
+console.log("Environment", process.env.NODE_ENV);
 console.log("DATABASE URL:", process.env.DATABASE_URL);
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const app = express();
@@ -65,17 +66,16 @@ async function startDevServer() {
 
 // Production mode: Serve the Vite build assets from the "dist" folder
 function startProdServer() {
-  app.use(express.static(path.join(__dirname, "../frontend")));
+  console.log("Launching Production Server");
+  const frontendPath = path.resolve(__dirname, "../frontend");
+  console.log("frontendPath", frontendPath);
+  app.use(express.static(frontendPath));
 
   // Example API route
   app.use("/api", apiRouter);
 
-  app.get("*", (_req, res) => {
-    res.sendFile(path.resolve(__dirname, "../frontend", "index.html"));
-  });
-
   app.listen(PORT, () => {
-    console.log("Production server running at http://localhost" + PORT);
+    console.log("Production server running at http://localhost:" + PORT);
   });
 }
 
