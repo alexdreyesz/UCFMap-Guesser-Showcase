@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { useState } from "react";
+import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 
 function SchoolMap() {
   const [center, setCenter] = useState<[number, number]>([28.6024, -81.2001]);
@@ -20,7 +20,7 @@ function SchoolMap() {
     <MapContainer
       center={center}
       zoom={16}
-      style={{ height: "50vh", width: "50%" }}
+      style={{ height: "50vh", width: "50vw" }}
       whenReady={() => {
         console.log("Map is ready (no arguments passed in v4).");
       }}
