@@ -1,14 +1,32 @@
+import { config } from "dotenv";
 import express from "express";
 import fs from "fs";
+import mongoose from "mongoose";
 import path from "path";
 import { createServer as createViteServer } from "vite";
-import { apiRouter } from "./api";
+import { apiRouter } from "./api.js";
 
+config();
+console.log("DATABASE URL:", process.env.DATABASE_URL);
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const app = express();
 
 const base = path.resolve(__dirname, "../frontend");
 const PORT = 80;
+
+mongoose
+  .connect(process.env.DATABASE_URL, {
+    auth: {
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+    },
+  })
+  .then(() => {
+    console.log("Connected");
+  })
+  .catch((e) => {
+    console.log(e);
+  });
 
 // Development mode: Use Vite's middleware for hot module replacement (HMR)
 async function startDevServer() {
@@ -47,13 +65,13 @@ async function startDevServer() {
 
 // Production mode: Serve the Vite build assets from the "dist" folder
 function startProdServer() {
-  app.use(express.static(path.join(__dirname, "../dist")));
+  app.use(express.static(path.join(__dirname, "../frontend")));
 
   // Example API route
   app.use("/api", apiRouter);
 
   app.get("*", (_req, res) => {
-    res.sendFile(path.resolve(__dirname, "../dist", "index.html"));
+    res.sendFile(path.resolve(__dirname, "../frontend", "index.html"));
   });
 
   app.listen(PORT, () => {

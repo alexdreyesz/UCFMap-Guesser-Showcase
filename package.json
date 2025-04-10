@@ -14,9 +14,9 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon backend/server.ts",
-    "start": "node backend/dist/server.js",
-    "build:clean": "rimraf backend/dist && rimraf frontend/dist",
-    "build": "vite build && tsc backend/server.ts  --esModuleInterop --moduleResolution node16 --module Node16 --outDir backend/dist/",
+    "start": "node dist/backend/server.js",
+    "build:clean": "rimraf backend/dist && rimraf frontend/dist && rimraf dist",
+    "build": "vite build && tsc -p backend",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -24,6 +24,7 @@
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "leaflet": "^1.9.4",
+    "mongoose": "^8.13.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-leaflet": "^5.0.0"

@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "outDir": "../dist/frontend" // Output compiled JS files here
+  },
+  "files": [],
+  "references": [{ "path": "../tsconfig.app.json" }, { "path": "../tsconfig.node.json" }]
+}
