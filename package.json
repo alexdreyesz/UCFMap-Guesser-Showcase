@@ -13,8 +13,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon backend/server.ts",
-    "start": "node dist/backend/server.js",
+    "dev": "NODE_ENV=development nodemon backend/server.ts",
+    "start": "NODE_ENV=production node dist/backend/server.js",
     "build:clean": "rimraf backend/dist && rimraf frontend/dist && rimraf dist",
     "build": "vite build && tsc -p backend",
     "lint": "eslint .",
