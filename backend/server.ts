@@ -5,6 +5,9 @@ import mongoose from "mongoose";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { apiRouter } from "./api.js";
+import session from "express-session";
+import passport from "passport";
+
 
 config();
 console.log("Environment", process.env.NODE_ENV);
@@ -16,12 +19,13 @@ const base = path.resolve(__dirname, "../frontend");
 const PORT = 80;
 
 mongoose
-  .connect(process.env.DATABASE_URL, {
+.connect(process.env.DATABASE_URL || "mongodb://localhost:27017/ucfmap")
+/*mongoose.connect(process.env.DATABASE_URL, {
     auth: {
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
     },
-  })
+  })*/
   .then(() => {
     console.log("Connected");
   })
@@ -36,6 +40,21 @@ async function startDevServer() {
       middlewareMode: true, // Run Vite in middleware mode
     },
   });
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  // Add session middleware
+  app.use(
+    session({
+      secret: "your-secret-key", // can change to something more secure
+      resave: false,
+      saveUninitialized: false,
+    })
+  );
+
+  // Initialize Passport
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.use("/api", apiRouter);
 
