@@ -8,7 +8,7 @@ import Create from "./pages/create/Create";
 function App() {
   return (
     <>
-      <Game/>
+      <Home/>
     </>
   );
 }
