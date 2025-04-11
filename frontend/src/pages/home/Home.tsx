@@ -1,7 +1,7 @@
 import "./Home.css";
 import Header from "../../components/header/Header"
 
-function App() {
+function Home() {
   return (
     <>
       <Header/>
@@ -9,4 +9,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
