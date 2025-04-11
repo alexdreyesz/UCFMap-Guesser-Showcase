@@ -9,5 +9,7 @@ whoami
 source ~/.bashrc
 node --version
 npm install
+npm run build:clean
+npm run build
 # restart pm2 daemon just incase new libraries are installed
 pm2 restart all
