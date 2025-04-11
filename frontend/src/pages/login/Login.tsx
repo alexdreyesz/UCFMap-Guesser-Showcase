@@ -1,6 +1,8 @@
 import Header from "../../components/header/Header";
 import "./Login.css";
 import React, { useState } from "react";
+import Header from "../../components/header/Header";
+
 function Login() {
   const [message, setMessage] = React.useState("");
   const [loginName, setLoginName] = React.useState("");
