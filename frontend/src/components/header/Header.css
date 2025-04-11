@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   color: white;
-  cursor: default;
+  cursor: pointer;
 }
 
 .guessr-title {
