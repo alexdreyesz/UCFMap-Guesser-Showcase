@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/backend" // Output compiled JS files here
+    "outDir": "../dist/backend", // Output compiled JS files here
+    "esModuleInterop": true,
+    "moduleResolution": "nodenext",
+
+    "module": "NodeNext",
+    "target": "ES2020"
   }
 }

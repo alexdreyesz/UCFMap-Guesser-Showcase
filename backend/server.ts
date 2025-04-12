@@ -1,14 +1,37 @@
+import { config } from "dotenv";
 import express from "express";
 import fs from "fs";
+import mongoose from "mongoose";
 import path from "path";
 import { createServer as createViteServer } from "vite";
-import { apiRouter } from "./api";
+import { apiRouter } from "./api.js";
+import session from "express-session";
+import passport from "passport";
 
+
+config();
+console.log("Environment", process.env.NODE_ENV);
+console.log("DATABASE URL:", process.env.DATABASE_URL);
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const app = express();
 
 const base = path.resolve(__dirname, "../frontend");
 const PORT = 80;
+
+mongoose
+.connect(process.env.DATABASE_URL || "mongodb://localhost:27017/ucfmap")
+/*mongoose.connect(process.env.DATABASE_URL, {
+    auth: {
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+    },
+  })*/
+  .then(() => {
+    console.log("Connected");
+  })
+  .catch((e) => {
+    console.log(e);
+  });
 
 // Development mode: Use Vite's middleware for hot module replacement (HMR)
 async function startDevServer() {
@@ -17,6 +40,21 @@ async function startDevServer() {
       middlewareMode: true, // Run Vite in middleware mode
     },
   });
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  // Add session middleware
+  app.use(
+    session({
+      secret: "your-secret-key", // can change to something more secure
+      resave: false,
+      saveUninitialized: false,
+    })
+  );
+
+  // Initialize Passport
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.use("/api", apiRouter);
 
@@ -47,17 +85,16 @@ async function startDevServer() {
 
 // Production mode: Serve the Vite build assets from the "dist" folder
 function startProdServer() {
-  app.use(express.static(path.join(__dirname, "../dist")));
+  console.log("Launching Production Server");
+  const frontendPath = path.resolve(__dirname, "../frontend");
+  console.log("frontendPath", frontendPath);
+  app.use(express.static(frontendPath));
 
   // Example API route
   app.use("/api", apiRouter);
 
-  app.get("*", (_req, res) => {
-    res.sendFile(path.resolve(__dirname, "../dist", "index.html"));
-  });
-
   app.listen(PORT, () => {
-    console.log("Production server running at http://localhost" + PORT);
+    console.log("Production server running at http://localhost:" + PORT);
   });
 }
 

@@ -18,17 +18,27 @@ You should see: v20.14.0. If you don't have the correct version of node. GET IT!
 
 ### Step 2:
 
+Create a `.env` file in the project root directory. It should have the following:
+
+```
+DATABASE_URL=mongodb://cluster0.021xzub.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+DATABASE_USERNAME=[redacted]
+DATABASE_PASSWORD=[redacted]
+```
+
+### Step 3:
+
 WHEN YOU HAVE THE CORRECT VERSION OF NODE, install the dependences:
 
 ```
 npm install
 ```
 
-### Step 3: DO NOT SKIP!!! IMPORTANT!
+### Step 4: DO NOT SKIP!!! IMPORTANT!
 
 MAKE SURE you are using VS Code and that you have Prettier Installed (`esbenp.prettier-vscode`). If you don't do this, then it will create a lot of problems when you accidentally format someone else's code, completely overwriting their work with your github commit.
 
-### Step 4:
+### Step 5:
 
 Please look at the guide to contributing below!!!!
 

@@ -8,5 +8,8 @@
   "editor.tabSize": 2,
   "prettier.printWidth": 100,
   "files.eol": "\n", // Ensures consistent line endings
-  "editor.trimAutoWhitespace": true
+  "editor.trimAutoWhitespace": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

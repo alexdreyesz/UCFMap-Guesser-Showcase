@@ -6,7 +6,7 @@ export default defineConfig({
   root: "./frontend", // Set the root directory for Vite
   plugins: [react()],
   build: {
-    outDir: "./dist/frontend",
+    outDir: "../dist/frontend",
   },
   server: {
     allowedHosts: ["ucfmap.evanpartidas.com"],

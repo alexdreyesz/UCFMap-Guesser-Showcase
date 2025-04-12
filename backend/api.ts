@@ -1,6 +1,9 @@
 import { Request, Response, Router } from "express";
-
+import authRouter from "./auth.js";
 export const apiRouter = Router();
+
+// Mount auth routes under "/"
+apiRouter.use("/", authRouter);
 
 // Example API route
 
