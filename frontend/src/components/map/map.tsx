@@ -1,6 +1,6 @@
 import "leaflet/dist/leaflet.css";
 import { useState } from "react";
-import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, useMapEvents, ZoomControl } from "react-leaflet";
 
 function SchoolMap() {
   const [center, setCenter] = useState<[number, number]>([28.6024, -81.2001]);
@@ -18,17 +18,21 @@ function SchoolMap() {
 
   return (
     <MapContainer
+      zoomControl={false}
       center={center}
-      zoom={16}
-      style={{ height: "50vh", width: "50vw" }}
+      zoom={15}
+      style={{ height: "100%", width: "120%" }}
       whenReady={() => {
         console.log("Map is ready (no arguments passed in v4).");
       }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution="&copy; OpenStreetMap contributors"
+        attribution="&copy; OpenStreetMap Contributors"
       />
+
+      <ZoomControl position="bottomright" />
+
       <HandleMapEvents />
     </MapContainer>
   );

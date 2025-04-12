@@ -6,14 +6,34 @@
   align-items: center;
 }
 
-.game-window-box {
+.game-window-box-images {
   width: 30rem;
   height: 25rem;
   flex-shrink: 0;
 
   border-radius: 1.25rem;
   border: 1px solid #9B9393;
-  background: url(<path-to-image>) lightgray 50% / cover no-repeat;
+  background: url("../../assets/images/ucf-pegasus-mural.jpg") lightgray 50% / cover no-repeat;
+
+  display: flex;
+  justify-content: center;
+}
+
+.game-window-box-map {
+  width: 30rem;
+  height: 25rem;
+  flex-shrink: 0;
+
+  background: lightgray 50%;
+  border-radius: 1.25rem;
+  border: 1px solid #9B9393;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+  overflow: hidden;
 }
 
 .text-rounds-container {
@@ -22,6 +42,18 @@
   align-self: center;
   text-align: center;
   cursor: default;
+
+  position: relative;
+  right: 5px;
+}
+
+.text-map-container {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  text-align: center;
+  cursor: default;
+  font-weight: bold;
 }
 
 .text-ucfmap-container {
@@ -47,4 +79,43 @@
   border: 2px solid #FFF;
   background: #F4BE0D;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.play-now-button:hover {
+  background-color: #b68f03;
+}
+
+.box-button-square {
+  width: 8rem;
+  height: 4rem;
+  flex-shrink: 0;
+
+  position: relative;
+  transform: translate(205px, 308px) rotate(90deg) scale(0.56);
+
+  display: flex;
+  justify-content:space-evenly;
+  align-items: center;
+
+  border-radius: 0.9375rem;
+  background: rgba(248, 249, 250, 0.70);
+}
+
+.box-button-button {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+
+  border-radius: 0.7rem;
+  border: 2px solid #FFF;
+  background: #F4BE0D;
+
+  transform: rotate(90deg);
+
+  color: white;
+  font-size: 24px;
+}
+
+.box-button-button:hover {
+  background-color: #b68f03;
 }

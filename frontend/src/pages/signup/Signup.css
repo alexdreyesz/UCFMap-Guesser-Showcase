@@ -24,13 +24,18 @@ grey: #f8f8f8
   width: 100%;
   max-width: 400px;
   box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .signin-title {
+  color:#000000;
   font-size: 1.8rem;
+  font-weight: bold;
   margin-bottom: 1.5rem;
-  text-align: center;
-  color: #080404;
 }
 
 .signin-input {
@@ -38,20 +43,20 @@ grey: #f8f8f8
   padding: 0.75rem;
   margin-bottom: 1rem;
   border-radius: 6px;
-  border: 1px solid #ffffff;
+  border: 1px solid #000000;
   font-size: 1rem;
 }
 
 .signup-button {
-  width: 100%;
-  padding: 0.75rem;
-  border: none;
-  background-color: #ffc904;
   color: white;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-weight: bold;
+  width: 12rem;
+  height: 3rem;
+  flex-shrink: 0;
+  border-radius: 0.7rem;
+  border: 2px solid #FFF;
+  background: #ffc904;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 .signup-button:hover {
@@ -63,7 +68,8 @@ grey: #f8f8f8
 
 .error-message {
   color: red;
-  font-size: 0.9rem;
+  font-size: 1rem !important; 
+  font-weight: bold;
   margin-top: 1rem;
   text-align: center;
 }

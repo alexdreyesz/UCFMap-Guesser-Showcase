@@ -67,7 +67,7 @@ function Signup() {
       <Header />
       <div className="signin-container">
         <div className="signin-box">
-          <div className="signin-title">Join UCF-Map</div>
+          <div className="signin-title">Join UCFMap Guessr</div>
           <input
             type="text"
             className="signin-input"
@@ -92,7 +92,7 @@ function Signup() {
             placeholder="NewUser@example.com"
             onChange={handleSetEmail}
           />
-          <button className="signin-button" onClick={startSignIn}>
+          <button className="signup-button" onClick={startSignIn}>
             Sign Up
           </button>
           <div className="error-message">{message}</div>

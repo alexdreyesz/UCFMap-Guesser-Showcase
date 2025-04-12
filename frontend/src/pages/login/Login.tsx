@@ -1,7 +1,6 @@
 import Header from "../../components/header/Header";
 import "./Login.css";
 import React, { useState } from "react";
-import Header from "../../components/header/Header";
 
 function Login() {
   const [message, setMessage] = React.useState("");
@@ -66,7 +65,7 @@ function Login() {
       <Header />
       <div className="login-container">
         <div className="login-box">
-          <div className="login-title">UCF-Geo Guesser Login</div>
+          <div className="login-title">UCFMAP Guessr Login</div>
           <input
             type="text"
             className="login-input"
