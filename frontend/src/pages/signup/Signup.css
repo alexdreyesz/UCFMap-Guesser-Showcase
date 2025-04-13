@@ -1,0 +1,81 @@
+/*
+UCF-Map Colors
+black: #080404
+yellow: #ffc904
+white: #ffffff
+grey: #f8f8f8
+
+
+*/
+/* signin.css */
+.signin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.signin-box {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 1 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.signin-title {
+  color: #000000;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.signin-input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: 1px solid #000000;
+  font-size: 1rem;
+}
+
+.signup-button {
+  color: white;
+  font-weight: bold;
+  width: 12rem;
+  height: 3rem;
+  flex-shrink: 0;
+  border-radius: 0.7rem;
+  border: 2px solid #fff;
+  background: #ffc904;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.signup-button:hover {
+  background-color: #b68f03;
+}
+
+.back-button-image {
+  position: relative;
+  bottom: -10px;
+  align-self: left;
+  flex-shrink: 0;
+  width: 4rem;
+  height: 4rem;
+}
+
+.error-message {
+  color: red;
+  font-size: 1rem !important;
+  font-weight: bold;
+  margin-top: 1rem;
+  text-align: center;
+}
