@@ -1,12 +1,12 @@
 import { config } from "dotenv";
 import express from "express";
+import session from "express-session";
 import fs from "fs";
 import mongoose from "mongoose";
+import passport from "passport";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { apiRouter } from "./api.js";
-import session from "express-session";
-import passport from "passport";
 
 
 config();
@@ -18,14 +18,14 @@ const app = express();
 const base = path.resolve(__dirname, "../frontend");
 const PORT = 80;
 
-mongoose
-.connect(process.env.DATABASE_URL || "mongodb://localhost:27017/ucfmap")
-/*mongoose.connect(process.env.DATABASE_URL, {
-    auth: {
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-    },
-  })*/
+// mongoose
+// .connect(process.env.DATABASE_URL || "mongodb://localhost:27017/ucfmap")
+mongoose.connect(process.env.DATABASE_URL, {
+  auth: {
+    username: process.env.DATABASE_USERNAME,
+    password: process.env.DATABASE_PASSWORD,
+  },
+})
   .then(() => {
     console.log("Connected");
   })
