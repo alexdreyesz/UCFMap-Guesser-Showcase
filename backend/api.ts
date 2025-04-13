@@ -5,8 +5,6 @@ export const apiRouter = Router();
 // Mount auth routes under "/"
 apiRouter.use("/", authRouter);
 
-// Example API route
-
 // Notice the _ lets you NOT use the variable
 apiRouter.get("/hello", (_req: Request, res: Response) => {
   res.json({ message: "Hello from the backend API!" });

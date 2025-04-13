@@ -1,7 +1,42 @@
-import "./GameWindow.css"
-import Map from "../map/map"
+// GameWindow.tsx
+import "./GameWindow.css";
+import SchoolMap from "../map/map";
+import { useState } from "react";
+import { LatLngExpression, LatLng } from "leaflet";
 
-function GameWindow() { 
+function GameWindow() {
+  // marker use state for coodinates
+  const [selectedMarker, setSelectedMarker] = useState<LatLngExpression | null>(null);
+
+  // submit handler
+  const handleSubmit = async () => {
+    if (!selectedMarker) {
+      alert("choose a spot on the map first.");
+      return;
+    }
+
+    // payload buildfing
+    const payload = {
+      latitude: (selectedMarker as LatLng).lat,
+      longitude: (selectedMarker as LatLng).lng,
+      userID: "",
+    };
+
+    try {
+      const response = await fetch("http://localhost:80/api/guesses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      console.log("Guess submitted successfully:", data);
+      //clear marker
+      setSelectedMarker(null);
+    } catch (error) {
+      console.error("error submitting guess:", error);
+    }
+  };
+
   return (
     <>
       <div className="game-window-container">
@@ -30,14 +65,16 @@ function GameWindow() {
           </div>
 
           <div className="game-window-box-map">
-            <Map />
+            <SchoolMap selectedMarker={selectedMarker} onMarkerChange={setSelectedMarker} />
           </div>
         </div>
       </div>
 
-      <button className="submit-button">SUBMIT</button>
+      <button className="submit-button" onClick={handleSubmit}>
+        SUBMIT
+      </button>
     </>
-  );  
+  );
 }
 
 export default GameWindow;
