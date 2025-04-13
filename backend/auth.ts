@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import express, { Request } from "express";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { getUserByUsername, getUserById, createUser } from "./database/user.js";
+import { createUser, getUserById, getUserByUsername, UCFMapUser } from "./database/user.js";
 
 const router = express.Router();
 
@@ -22,6 +22,12 @@ passport.use(new LocalStrategy(async (username, password, done) => {
 })
 );
 
+// This will add the user type to the request object
+declare global {
+  namespace Express {
+    interface User extends UCFMapUser { }
+  }
+}
 passport.serializeUser((user: any, done) => {
   done(null, user.id);
 });
