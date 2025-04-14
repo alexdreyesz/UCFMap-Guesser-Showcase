@@ -28,6 +28,7 @@ declare global {
     interface User extends UCFMapUser { }
   }
 }
+
 passport.serializeUser((user: any, done) => {
   done(null, user.id);
 });
