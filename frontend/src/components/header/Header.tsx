@@ -19,7 +19,7 @@ function Header() {
         <p className="sign-in">
           <img className="lock-icon" src={lock} alt="lock" /> Guessr&nbsp;&nbsp;
           <Link to="/signin" className="sign-hover">
-            <strong>SIGN IN +</strong>
+            <strong>SIGN UP +</strong>
           </Link>
         </p>
 
