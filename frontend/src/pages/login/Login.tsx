@@ -80,13 +80,14 @@ function Login() {
             placeholder="Password"
             onChange={handleSetPassword}
           />
+
+          <Link to="/create">
           <button className="login-button" onClick={startLogin}>
             Login
           </button>
+          </Link>
+
           <div className="error-message">{message}</div>
-        </div>
-        <div className="signup-link-text">
-          <Link to="/signin"> Not a member? Join Now!</Link>
         </div>
       </div>
     </>

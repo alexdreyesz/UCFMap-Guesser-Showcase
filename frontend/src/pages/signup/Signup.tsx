@@ -106,14 +106,10 @@ function Signup() {
       <title>Join Us</title>
       <Header />
       <div className="signin-container">
-        <Link to="/login">
-          <img className="back-button-image" src={backB} style={{ cursor: "pointer" }} />
-        </Link>
         <div className="signin-box">
           <div className="signin-title">Join UCFMap Guessr</div>
 
           <label className="signin-text-label">
-            <strong>Username</strong>
             <input
               type="text"
               className="signin-input"
@@ -126,7 +122,6 @@ function Signup() {
           </label>
 
           <label className="signin-text-label">
-            <strong>Password</strong>
             <input
               type="password"
               className="signin-input"
@@ -134,14 +129,12 @@ function Signup() {
               onChange={handleSetPassword}
             />
             <div className="sigin-text-input">
-              Password must be {">"}'8 and include 1 number.
               {locks[1] == 0 && (
                 <p className="fault-message">Password does not meet the requirments</p>
               )}
             </div>
           </label>
           <label className="signin-text-label">
-            <strong>Re-Enter Password</strong>
             <input
               type="password"
               className="signin-input"
@@ -153,7 +146,6 @@ function Signup() {
             </div>
           </label>
           <label className="signin-text-label">
-            <strong>Email</strong>
             <input
               type="email"
               className="signin-input"
@@ -164,9 +156,13 @@ function Signup() {
               {locks[3] == 0 && <p className="fault-message">This is not a valid email</p>}
             </div>
           </label>
-          <button className="signup-button" onClick={startSignIn}>
-            Sign Up
-          </button>
+
+          <Link to="/create">
+            <button className="signup-button" onClick={startSignIn}>
+              Sign Up
+            </button>
+          </Link>
+
           <div className="error-message">{message}</div>
         </div>
       </div>

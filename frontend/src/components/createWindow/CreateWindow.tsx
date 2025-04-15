@@ -1,9 +1,10 @@
 import "./CreateWindow.css";
 import { useNavigate } from "react-router-dom";
-import backB from "../../assets/icons/Back-Button.png";
 import { LatLngExpression, LatLng } from "leaflet";
 import SchoolMap from "../map/map";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import geoImage from "../../assets/images/ucf-background.jpg";
+import clip from "../../assets/icons/clip.png"
 
 // this is the main part of the create window, holds everything
 function CreateWindow() {
@@ -21,17 +22,6 @@ function CreateWindow() {
 
   function handleSetName(e: any): void {
     setName(e.target.value);
-  }
-
-  function goBack() {
-    //if there are filled out points, such as images or text, display a warining
-    if (
-      window.confirm(
-        "Your about to leave with out submitting. Data on this page won't be saved! Are you sure you want to leave?"
-      )
-    ) {
-      navigate("/");
-    } else return;
   }
 
   function runImage(e: any): void {
@@ -90,52 +80,118 @@ function CreateWindow() {
     }
   }
 
+  const [scale, setScale] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const dragStart = useRef({ x: 0, y: 0 });
+  
+  const handleZoomIn = () => {
+    setScale((prev) => Math.min(prev + 0.1, 3));
+  };
+  
+  const handleZoomOut = () => {
+    setScale((prev) => Math.max(prev - 0.1, 1)); // prevent scaling below original
+    setPosition({ x: 0, y: 0 }); // reset position when zooming out fully
+  };
+  
+  const handleMouseDown = (e) => {
+    if (scale <= 1) return;
+    setIsDragging(true);
+    dragStart.current = {
+      x: e.clientX - position.x,
+      y: e.clientY - position.y,
+    };
+  };
+  
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    setPosition({
+      x: e.clientX - dragStart.current.x,
+      y: e.clientY - dragStart.current.y,
+    });
+  };
+  
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
   return (
     <>
-      <div className="location-container">
-        <label className="text-location-Name">
-          <strong>Location Name</strong>
-          <input
-            type="text"
-            className="location-input"
-            placeholder="example: UCF Student Center"
-            onChange={handleSetName} // change when implemented.
-          />
-        </label>
+      <div className="text-rounds-container">
+        <p>Round 1</p>
+        <p>&nbsp;&nbsp;|&nbsp;&nbsp;</p>
+        <p>
+          <div className="current-round">Round 2</div>
+        </p>
+        <p>&nbsp;&nbsp;|&nbsp;&nbsp;</p>
+        <p>Round 3</p>
       </div>
 
-      <div className="create-window-container">
+      <div className="game-window-container">
         <div>
-          <div className="text-ucfmap-container">
-            <p className="text-map-container"> Add Image</p>
+          <div className="image-rounds-container">
+            <p>Upload A Picture</p>
           </div>
+
           <div
-            className="window-box-upload-preview"
-            style={{ backgroundImage: `url(${imgUrl})` }}
-          ></div>
-          <input type="file" accept="image/*" className="upload-img-input" onChange={runImage} />
+            className="game-window-box-images"
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onDragStart={(e) => e.preventDefault()}
+          >
+            <img
+              className="geo-image"
+              src={geoImage}
+              draggable={false}
+              onDragStart={(e) => e.preventDefault()}
+              style={{
+                transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+                transformOrigin: "top left",
+                transition: isDragging ? "none" : "transform 0.3s ease",
+                userSelect: "none",
+                pointerEvents: "none",
+              }}
+            />
+
+            <div className="upload-file-square">
+              <label htmlFor="file-upload" className="upload-img-input-label">
+                <img src={clip} className="upload-clip" />
+              </label>
+
+              <input
+                type="file"
+                id="file-upload"
+                accept="image/*"
+                className="upload-img-input"
+                onChange={runImage}
+              />
+            </div>
+
+            <div className="box-button-square">
+              <button className="box-button-button" onClick={handleZoomIn}>
+                +
+              </button>
+              <button className="box-button-button" onClick={handleZoomOut}>
+                -
+              </button>
+            </div>
+          </div>
         </div>
 
         <div>
           <div className="text-ucfmap-container">
-            <p className="text-map-container"> Select Location</p>
+            <p className="text-map-container">UCF MAP</p>
           </div>
-          <div className="window-box-map">
+
+          <div className="game-window-box-map">
             <SchoolMap selectedMarker={selectedMarker} onMarkerChange={setSelectedMarker} />
           </div>
         </div>
       </div>
 
-      <button className="submit-button" onClick={runSubmit}>
-        Submit
-      </button>
-
-      <img
-        className="back-button-image"
-        src={backB}
-        onClick={goBack}
-        style={{ cursor: "pointer" }}
-      />
+      <button className="submit-button">SUBMIT</button>
     </>
   );
 }

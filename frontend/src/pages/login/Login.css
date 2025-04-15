@@ -64,14 +64,6 @@ grey: #f8f8f8
   background-color: #b68f03;
 }
 
-.signup-link-text {
-  font-size: 2rem !important;
-  font-weight: bold;
-  margin-top: 1rem;
-  display: flex;
-  text-decoration: underline;
-}
-
 .error-message {
   color: red;
   font-size: 1rem !important;

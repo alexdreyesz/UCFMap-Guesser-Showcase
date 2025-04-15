@@ -1,42 +1,72 @@
-.create-window-container {
+.game-window-container{
   width: auto;
-  height: 480px;
+  height: 460px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  /*border: 5px solid #000000; Testing only delete me */
 }
 
-.location-container {
-  width: auto;
-  height: auto;
-
-  display: flex;
-  align-items: left;
-  margin-top: 3rem;
-
-  flex-direction: column;
-  flex-shrink: 0;
-  right: 3rem;
+.current-round {
+  font-weight: bold !important;
+  color: #F4BE0D !important;
 }
-.text-location-Name {
-  display: flex;
+
+.image-rounds-container {
+  font-weight: Bold;
+  align-self: center;
+  text-align: center;
+}
+
+.game-window-box-images {
+  width: 30rem;
+  height: 25rem;
   flex-shrink: 0;
-  flex-direction: column;
-  align-self: left;
-  text-align: left;
+
+  border-radius: 1.25rem;
+  border: 1px solid #9B9393;
+  background: lightgray 50% / cover no-repeat;
+
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.geo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+}
+
+.game-window-box-map {
+  width: 30rem;
+  height: 25rem;
+  flex-shrink: 0;
+
+  background: lightgray 50%;
+  border-radius: 1.25rem;
+  border: 1px solid #9B9393;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   position: relative;
+  overflow: hidden;
 }
-.location-input {
-  width: 18rem;
-  height: 2rem;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border-radius: 6px;
-  border: 2px solid #000000;
-  font-size: 1rem;
+
+.text-rounds-container {
   display: flex;
+  justify-content: center;
+  align-self: center;
+  text-align: center;
+  cursor: default;
+
+  position: relative;
+  top: 15px;
 }
+
 .text-map-container {
   display: flex;
   justify-content: center;
@@ -54,59 +84,10 @@
   cursor: default;
 }
 
-.window-box-upload-preview {
-  /*  This is the preview for the uploaded image  */
-  width: 30rem;
-  height: 25rem;
-  flex-shrink: 0;
-
-  border-radius: 1.25rem;
-  border: 1px solid #9b9393;
-  background: url("../../assets/icons/no-image-icon.png");
-  background-size: cover;
-
-  display: flex;
-  justify-content: center;
-}
-
-.upload-img-text {
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  text-align: center;
-  cursor: pointer;
-}
-
-.uploaded-img-text {
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  text-align: center;
-  cursor: pointer;
-}
-
-.window-box-map {
-  width: 30rem;
-  height: 25rem;
-  flex-shrink: 0;
-
-  background: lightgray 50%;
-  border-radius: 1.25rem;
-  border: 1px solid #9b9393;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 2.5rem;
-}
-
 .submit-button {
   position: relative;
   bottom: -10px;
-  align-self: left;
+  align-self: center;
   width: 19rem;
   height: 3.5rem;
   flex-shrink: 0;
@@ -115,33 +96,95 @@
   color: white;
 
   border-radius: 0.7rem;
-  border: 2px solid #fff;
-  background: #f4be0d;
+  border: 2px solid #FFF;
+  background: #F4BE0D;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-.back-button-image {
-  position: relative;
-  bottom: -10px;
-  align-self: left;
-  flex-shrink: 0;
-  width: 4rem;
-  height: 4rem;
+.submit-button:hover {
+  background-color: #b68f03;
 }
 
-.back-button-image:hover {
-  scale: 1.5;
+.box-button-square {
+  width: 8rem;
+  height: 4rem;
+  flex-shrink: 0;
+
+  position: absolute;
+  transform: translate(205px, 308px) rotate(90deg) scale(0.56);
+
+  display: flex;
+  justify-content:space-evenly;
+  align-items: center;
+
+  border-radius: 0.9375rem;
+  background: rgba(248, 249, 250, 0.70);
+}
+
+.box-button-button {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+
+  border-radius: 0.7rem;
+  border: 2px solid #FFF;
+  background: #F4BE0D;
+
+  transform: rotate(90deg);
+
+  color: white;
+  font-size: 24px;
+}
+
+.box-button-button:hover {
+  background-color: #b68f03;
+}
+
+.upload-file-square {
+  width: 4rem;
+  height: 4rem;
+  flex-shrink: 0;
+
+  position: absolute;
+  transform: translate(-190px, 310px);
+
+  display: flex;
+  justify-content:space-evenly;
+  align-items: center;
+
+  border-radius: 0.9375rem;
+  background: rgba(248, 249, 250, 0.70); 
 }
 
 .upload-img-input {
-  color: white;
-  font-weight: bold;
-  width: 12rem;
-  height: 2rem;
-  margin-top: 1rem;
+  display: none;
+}
+
+.upload-img-input-label {
+  width: 3rem;
+  height: 3rem;
   flex-shrink: 0;
+
   border-radius: 0.7rem;
-  border: 2px solid #fff;
-  background: #ffc904;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border: 2px solid #FFF;
+  background: #F4BE0D;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  font-size: 24px;
+}
+
+.upload-img-input-label:hover {
+  background-color: #b68f03;
+  cursor: pointer;
+  scale: 110% 110%;
+}
+
+.upload-clip {
+  width: 30px;
+  height: 30px;
+  filter: invert(1);
 }

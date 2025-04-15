@@ -8,7 +8,7 @@ function Home() {
       <Header />
       <div className="home-background-container">
         <p className="text-title">UCFMAP Guessr</p>
-        <img src={knightro} className="knightro-gif"/>
+        <img src={knightro} draggable={false} className="knightro-gif"/>
       </div>
     </>
   );
