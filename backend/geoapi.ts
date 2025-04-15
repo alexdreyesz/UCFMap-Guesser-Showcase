@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //register a new treasure
-router.post("/treasure", upload.single('image'), async (req: express.Request, res: express.Response): Promise<void> => {
+router.post("/create", upload.single('image'), async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     console.log("req.body: ", req.body);
     console.log("req.file: ", req.file.path);
