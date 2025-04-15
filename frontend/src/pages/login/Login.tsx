@@ -25,27 +25,21 @@ function Login() {
     }
     //create the obj
     //to-do hash password
-    let jsPack = JSON.stringify({ login: loginName, password: loginPassword }); //json package
+    let jsPack = JSON.stringify({ username: loginName, password: loginPassword }); //json package
 
     try {
       //set response
-      const response = await fetch("http://localhost:80/api/login", {
-        // Need to replace with api code
+      const response = await fetch("/api/login", {
         method: "POST",
         body: jsPack,
         headers: { "Content-Type": "application/json" },
       });
-      let reply = JSON.parse(await response.text()); // this should have the text
-      if (reply.id <= 0) {
-        // we may not have a user id, so maybe this needs to be a status check
+      const reply = await response.json();
+
+      if (!response.ok || !reply.loggedIn) {
         setMessage("Looks like your Username/Password is incorrect!");
-      } //
-      else {
-        //create user cache/cookie
-        //stores username as UserName and UserEmail
-        let usr = { UserName: reply.username, UserEmail: reply.email };
-        localStorage.setItem("user_data", JSON.stringify(usr));
-        //returns home
+      } else {
+        localStorage.setItem("user_data", JSON.stringify({ UserName: loginName }));
         window.location.href = "/home";
       }
     } catch (error: any) {
