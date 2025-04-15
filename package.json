@@ -13,10 +13,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon backend/server.ts",
+    "dev": "mkdir -p uploads && cross-env NODE_ENV=development nodemon backend/server.ts",
     "start": "NODE_ENV=production node dist/backend/server.js",
     "build:clean": "rimraf backend/dist && rimraf frontend/dist && rimraf dist",
-    "build": "vite build && tsc -p backend",
+    "build": "vite build && tsc -p backend && mkdir -p dist/uploads",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -27,6 +27,7 @@
     "express-session": "^1.18.1",
     "leaflet": "^1.9.4",
     "mongoose": "^8.13.2",
+    "multer": "^1.4.5-lts.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "react": "^19.0.0",

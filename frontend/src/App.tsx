@@ -1,10 +1,11 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./index.css";
-import Home from "./pages/home/Home";
+import Create from "./pages/create/Create";
 import Game from "./pages/game/Game";
-import Signup from "./pages/signup/Signup";
+import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
-import Create from "./pages/create/Create"
+import Signup from "./pages/signup/Signup";
+import TestUpload from "./pages/testupload/TestUpload";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signin" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/create" element={<Create />} />
+        <Route path="/test" element={<TestUpload />} />
       </Routes>
     </Router>
   );

@@ -4,6 +4,7 @@ export type UCFMapGeoQuestion = {
   id?: string;
   location: { longitude: number, latitude: number };
   imageURL: string;
+  authorId: string
 };
 
 const GeoQuestion = mongoose.model(
@@ -17,6 +18,7 @@ const GeoQuestion = mongoose.model(
       required: true,
     },
     imageURL: { type: String, required: true },
+    authorId: { type: String, required: true },
   })
 );
 
@@ -39,6 +41,7 @@ export async function createGeoQuestion(
       latitude: geoQuestion.location.latitude,
     },
     imageURL: geoQuestion.imageURL,
+    authorId: geoQuestion.authorId,
   });
   await dbGeoQuestion.save();
   return {
@@ -48,6 +51,7 @@ export async function createGeoQuestion(
       latitude: geoQuestion.location.latitude,
     },
     imageURL: geoQuestion.imageURL,
+    authorId: geoQuestion.authorId,
   };
 }
 
@@ -71,7 +75,19 @@ export async function getGeoQuestionById(id: string): Promise<UCFMapGeoQuestion 
 export async function getRandomGeoQuestion(): Promise<UCFMapGeoQuestion | null> {
   const count = await GeoQuestion.countDocuments();
   const random = Math.floor(Math.random() * count);
-  return await GeoQuestion.findOne().skip(random).exec();
+  const result = await GeoQuestion.findOne().skip(random).exec();
+  if (!result) {
+    return null;
+  }
+  return {
+    id: result._id.toString(),
+    location: {
+      longitude: result.location.longitude,
+      latitude: result.location.latitude,
+    },
+    imageURL: result.imageURL,
+    authorId: result.authorId,
+  }
 }
 
 /**
@@ -92,6 +108,7 @@ export async function deleteGeoQuestion(
       latitude: geoQuestion.location.latitude,
     },
     imageURL: geoQuestion.imageURL,
+    authorId: geoQuestion.authorId,
   };
 }
 

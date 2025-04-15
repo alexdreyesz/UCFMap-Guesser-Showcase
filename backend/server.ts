@@ -58,6 +58,9 @@ async function startDevServer() {
 
   app.use("/api", apiRouter);
 
+  // Serve static files from the "uploads" directory
+  app.use("/uploads", express.static("uploads"));
+
   // Use Vite's dev server as middleware to handle frontend requests
   app.use(vite.middlewares);
 
@@ -90,8 +93,23 @@ function startProdServer() {
   console.log("frontendPath", frontendPath);
   app.use(express.static(frontendPath));
 
-  // Example API route
+  // Add session middleware
+  app.use(
+    session({
+      secret: "your-secret-key", // can change to something more secure
+      resave: false,
+      saveUninitialized: false,
+    })
+  );
+
+  // Initialize Passport
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   app.use("/api", apiRouter);
+
+  // Serve static files from the "uploads" directory
+  app.use("/uploads", express.static("uploads"));
 
   app.listen(PORT, () => {
     console.log("Production server running at http://localhost:" + PORT);

@@ -1,18 +1,52 @@
 import express from "express";
-import { createGeoQuestion, getGeoQuestionById, deleteGeoQuestion, getRandomGeoQuestion, UCFMapGeoQuestion } from "./database/geoquestionts.js";
+import multer from "multer";
+import { createGeoQuestion, deleteGeoQuestion, getGeoQuestionById, getRandomGeoQuestion, UCFMapGeoQuestion } from "./database/geoquestionts.js";
+
+// Import Multer types
+import { File as MulterFile } from "multer";
+
+// Extend the Request interface to include the 'file' property
+declare global {
+  namespace Express {
+    interface Request {
+      file?: MulterFile;
+    }
+  }
+}
 
 const router = express.Router();
 
+// Setup disk storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Make sure this folder exists
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.mimetype.split('/')[1]); // Use the original file extension
+  }
+});
+
+const upload = multer({ storage: storage });
+
 //register a new treasure
-router.post("/treasure", async (req: express.Request, res: express.Response): Promise<void> => {
+router.post("/treasure", upload.single('image'), async (req: express.Request, res: express.Response): Promise<void> => {
   try {
-    const { location, imageURL }: UCFMapGeoQuestion = req.body;
-    if (!location || !imageURL) {
-      res.status(400).json({ error: "Missing required fields" });
-      return;
+    console.log("req.body: ", req.body);
+    console.log("req.file: ", req.file.path);
+    console.log("req.file: ", req.file);
+    if (req.isAuthenticated()) {
+      const { location, imageURL }: UCFMapGeoQuestion = req.body;
+      if (!location || !(imageURL || req.file.path)) {
+        res.status(400).json({ error: "Missing required fields" });
+        return;
+      }
+      const newTreasure = await createGeoQuestion({ location, imageURL, authorId: req.user.id });
+      res.status(201).json(newTreasure);
+    } else {
+      console.log("User not authenticated", req.user);
+      res.status(401).json({ error: "User not authenticated" });
     }
-    const newTreasure = await createGeoQuestion({ location, imageURL });
-    res.status(201).json(newTreasure);
   } catch (err) {
     console.error("Error creating treasure: ", err);
     res.status(500).json({ error: "Server error while creating treasure" });
