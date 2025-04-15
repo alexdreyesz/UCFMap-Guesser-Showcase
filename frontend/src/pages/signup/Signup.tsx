@@ -41,15 +41,12 @@ function Signup() {
         body: jsPack,
         headers: { "Content-Type": "application/json" },
       });
-      const reply = JSON.parse(await response.text()); // this should have the text
-      if (reply.status >= 400) {
-        // check status
-        setMessage("It's possible this user already exist.");
-      } //
-      else if (reply.status == 200) {
-        //set stuff to make the link to login appear
-        setMessage("User successfully added. Please login.");
-      }
+      const reply = await response.json();
+    if (!response.ok) {
+      setMessage(reply.message || "It's possible this user already exists.");
+    } else  {
+      setMessage("User successfully added. Please login.");
+    }
     } catch (error: any) {
       alert(error.toString());
       return;
@@ -78,24 +75,28 @@ function Signup() {
             className="signin-input"
             placeholder="Username"
             onChange={handleSetLoginName}
+            value={userName}
           />
           <input
             type="password"
             className="signin-input"
             placeholder="Password"
             onChange={handleSetPassword}
+            value={userPassword}
           />
           <input
             type="password"
             className="signin-input"
             placeholder="Re-enter Password"
             onChange={handleSetPasswordCheck}
+            value={userCheck}
           />
           <input
-            type="text"
+            type="email"
             className="signin-input"
             placeholder="NewUser@example.com"
             onChange={handleSetEmail}
+            value={userEmail}
           />
           <button className="signup-button" onClick={startSignIn}>
             Sign Up
