@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { createGeoQuestion, deleteGeoQuestion, getGeoQuestionById, getRandomGeoQuestion, UCFMapGeoQuestion } from "./database/geoquestionts.js";
+import { createGeoQuestion, deleteGeoQuestion, getGeoQuestionById, getRandomGeoQuestion, UCFMapGeoQuestion, getAllGeoQuestions } from "./database/geoquestionts.js";
 
 // Import Multer types
 import { File as MulterFile } from "multer";
@@ -67,6 +67,21 @@ router.get("/treasure/:treasureId", async (req: express.Request, res: express.Re
   } catch (err) {
     console.error("Error fetching treasure: ", err);
     res.status(500).json({ error: "Server error while fetching treasure" });
+  }
+});
+
+//get all treasures by id
+router.get("/treasures", async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const allGeoQuestions = await getAllGeoQuestions();
+    if (!allGeoQuestions || allGeoQuestions.length === 0) {
+      res.status(404).json({ error: "No treasures found" });
+      return;
+    }
+    res.status(200).json(allGeoQuestions);
+  } catch (err) {
+    console.error("Error fetching geoquestions: ", err);
+    res.status(500).json({ error: "Server error while fetching geoquestions" });
   }
 });
 

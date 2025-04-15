@@ -113,6 +113,24 @@ export async function deleteGeoQuestion(
 }
 
 
+/**
+ * 
+ * @returns all geo questions in the database
+ */
+export async function getAllGeoQuestions(): Promise<UCFMapGeoQuestion[]> {
+  const geoQuestions = await GeoQuestion.find();
+  return geoQuestions.map((geoQuestion) => ({
+    id: geoQuestion._id.toString(),
+    location: {
+      longitude: geoQuestion.location.longitude,
+      latitude: geoQuestion.location.latitude,
+    },
+    imageURL: geoQuestion.imageURL,
+    authorId: geoQuestion.authorId,
+  }));
+}
+
+
 
 
 
