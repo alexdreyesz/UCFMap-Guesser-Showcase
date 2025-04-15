@@ -1,28 +1,50 @@
 // mapmarkers.tsx
 import React from "react";
-import { Marker, Popup, useMapEvents } from "react-leaflet";
+import { Marker, Popup, useMapEvents, Polyline } from "react-leaflet";
 import { LatLngExpression } from "leaflet";
 
 interface MapMarkersProps {
   selectedMarker: LatLngExpression | null;
+  correctAnswer: LatLngExpression | null;
+  showResult: boolean;
   onMarkerChange: (marker: LatLngExpression | null) => void;
 }
 
-const MapMarkers: React.FC<MapMarkersProps> = ({ selectedMarker, onMarkerChange }) => {
-  // Listen for clicks on the map.
+const MapMarkers: React.FC<MapMarkersProps> = ({
+  selectedMarker,
+  correctAnswer,
+  showResult,
+  onMarkerChange,
+}) => {
+  // Handle user clicks on the map
   useMapEvents({
     click(e) {
-      // On click, update the marker to the clicked location.
       onMarkerChange(e.latlng);
     },
   });
 
   return (
     <>
+      {/* User's guess marker */}
       {selectedMarker && (
         <Marker position={selectedMarker}>
-          <Popup>Your selected location: {selectedMarker.toString()}</Popup>
+          <Popup>Your guess: {selectedMarker.toString()}</Popup>
         </Marker>
+      )}
+
+      {/* Correct answer marker */}
+      {showResult && correctAnswer && (
+        <Marker position={correctAnswer}>
+          <Popup>Correct location</Popup>
+        </Marker>
+      )}
+
+      {/* Red polyline between guess and correct answer */}
+      {showResult && selectedMarker && correctAnswer && (
+        <Polyline
+          positions={[selectedMarker, correctAnswer]}
+          pathOptions={{ color: "red", weight: 3 }}
+        />
       )}
     </>
   );

@@ -1,26 +1,88 @@
-// GameWindow.tsxz
+// GameWindow.tsx
 import "./GameWindow.css";
 import SchoolMap from "../map/map";
-import { useRef, useState } from "react";
-import { LatLngExpression, LatLng } from "leaflet";
+import { useRef, useEffect, useState } from "react";
+import L, { LatLngExpression, LatLng } from "leaflet";
 import geoImage from "../../assets/images/ucf-pegasus-mural.jpg";
 
 function GameWindow() {
-  // marker use state for coodinates
   const [selectedMarker, setSelectedMarker] = useState<LatLngExpression | null>(null);
+  const [correctAnswer, setCorrectAnswer] = useState<LatLngExpression | null>(null);
+  const [distance, setDistance] = useState<number | null>(null);
+  const [score, setScore] = useState<number | null>(null);
+  const [showResult, setShowResult] = useState(false);
 
-  // submit handler
+  useEffect(() => {
+    // async function loadTreasure() {
+    //   try {
+    //     const response = await fetch("http://localhost:80/api/treasure/random");
+    //     if (!response.ok) {
+    //       throw new Error("Network response was not ok");
+    //     }
+    //     const data = await response.json();
+    //     setCorrectAnswer([data.location.latitude, data.location.longitude]);
+    //     console.log("Correct answer:", data.location.latitude, data.location.longitude);
+    //   } catch (error) {
+    //     console.error("Error fetching correct answer:", error);
+    //   }
+    // }
+
+    // loadTreasure();
+    //test
+    setCorrectAnswer([28.6024, -81.2001]);
+  }, []);
+
+  // score formula
+  function calculateScore(distanceMeters: number): number {
+    const maxScore = 5000;
+    const decayFactor = 150;
+    return Math.max(0, Math.round(maxScore * Math.exp(-distanceMeters / decayFactor)));
+  }
+
   const handleSubmit = async () => {
     if (!selectedMarker) {
-      alert("choose a spot on the map first.");
+      alert("Choose a spot on the map first.");
       return;
     }
 
-    // payload buildfing
+    if (!correctAnswer) {
+      alert("Correct answer not loaded yet.");
+      return;
+    }
+
+    //convert to Leaflet objects////
+    let userLatLng: L.LatLng;
+    if (Array.isArray(selectedMarker)) {
+      userLatLng = L.latLng(selectedMarker[0], selectedMarker[1]);
+    } else if ("lat" in selectedMarker && "lng" in selectedMarker) {
+      userLatLng = L.latLng(selectedMarker.lat, selectedMarker.lng);
+    } else {
+      console.error("Invalid selectedMarker format", selectedMarker);
+      return;
+    }
+    let correctLatLng: L.LatLng;
+    if (Array.isArray(correctAnswer)) {
+      correctLatLng = L.latLng(correctAnswer[0], correctAnswer[1]);
+    } else if ("lat" in correctAnswer && "lng" in correctAnswer) {
+      correctLatLng = L.latLng(correctAnswer.lat, correctAnswer.lng);
+    } else {
+      console.error("Invalid correctAnswer format", correctAnswer);
+      return;
+    }
+    /////////////////////////////////////////////////
+    const calculatedDistance = userLatLng.distanceTo(correctLatLng);
+    setDistance(calculatedDistance);
+
+    const calculatedScore = calculateScore(calculatedDistance);
+    setScore(calculatedScore);
+
+    setShowResult(true);
+
+    // Send to backend (optional)
     const payload = {
-      latitude: (selectedMarker as LatLng).lat,
-      longitude: (selectedMarker as LatLng).lng,
-      userID: "",
+      latitude: userLatLng.lat,
+      longitude: userLatLng.lng,
+      userID: "", // add this if you track users
     };
 
     try {
@@ -29,12 +91,11 @@ function GameWindow() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
       const data = await response.json();
       console.log("Guess submitted successfully:", data);
-      //clear marker
-      setSelectedMarker(null);
     } catch (error) {
-      console.error("error submitting guess:", error);
+      console.error("Error submitting guess:", error);
     }
   };
 
@@ -81,7 +142,7 @@ function GameWindow() {
             <p>Round 1</p>
             <p>&nbsp;&nbsp;|&nbsp;&nbsp;</p>
             <p>
-              <div className="current-round">Round 2</div>
+              <strong>Round 2</strong>
             </p>
             <p>&nbsp;&nbsp;|&nbsp;&nbsp;</p>
             <p>Round 3</p>
@@ -126,7 +187,12 @@ function GameWindow() {
           </div>
 
           <div className="game-window-box-map">
-            <SchoolMap selectedMarker={selectedMarker} onMarkerChange={setSelectedMarker} />
+            <SchoolMap
+              selectedMarker={selectedMarker}
+              onMarkerChange={setSelectedMarker}
+              correctAnswer={correctAnswer}
+              showResult={showResult}
+            />
           </div>
         </div>
       </div>
@@ -134,6 +200,17 @@ function GameWindow() {
       <button className="submit-button" onClick={handleSubmit}>
         SUBMIT
       </button>
+
+      {showResult && distance !== null && (
+        <div className="distance-result">
+          <p>
+            You were <strong>{(distance / 1000).toFixed(2)} km</strong> away.
+          </p>
+          <p>
+            You earned <strong>{score}</strong> points!
+          </p>
+        </div>
+      )}
     </>
   );
 }

@@ -1,27 +1,44 @@
 // map.tsx
 import "leaflet/dist/leaflet.css";
-import { useState } from "react";
-import { MapContainer, TileLayer, useMapEvents, ZoomControl } from "react-leaflet";
+import { useEffect, useRef, useState } from "react";
+import { MapContainer, TileLayer, useMap, ZoomControl } from "react-leaflet";
 import MapMarkers from "./mapmarkers";
-import { LatLngExpression } from "leaflet";
+import { LatLngExpression, LatLngBounds, LatLng } from "leaflet";
 
 interface SchoolMapProps {
   selectedMarker: LatLngExpression | null;
   onMarkerChange: (marker: LatLngExpression | null) => void;
+  correctAnswer: LatLngExpression | null;
+  showResult: boolean;
 }
 
-function SchoolMap({ selectedMarker, onMarkerChange }: SchoolMapProps) {
+function SchoolMap({ selectedMarker, onMarkerChange, correctAnswer, showResult }: SchoolMapProps) {
   const [center, setCenter] = useState<[number, number]>([28.6024, -81.2001]);
 
-  // This component updates the center state when the map has finished moving.
-  function HandleMapEvents() {
-    useMapEvents({
-      moveend: (e) => {
-        const newCenter = e.target.getCenter();
-        setCenter([newCenter.lat, newCenter.lng]);
-      },
-    });
-    return null; // It doesn’t render any UI.
+  // zoom out so that both points appear after answer appears
+  function AutoZoomOnResult() {
+    const map = useMap();
+
+    useEffect(() => {
+      if (showResult && selectedMarker && correctAnswer) {
+        let point1: LatLng;
+        let point2: LatLng;
+
+        // Convert LatLngExpression to a standard LatLng object
+        const toLatLng = (input: LatLngExpression) =>
+          Array.isArray(input)
+            ? new LatLng(input[0], input[1])
+            : new LatLng((input as any).lat, (input as any).lng);
+
+        point1 = toLatLng(selectedMarker);
+        point2 = toLatLng(correctAnswer);
+
+        const bounds = new LatLngBounds([point1, point2]);
+        map.fitBounds(bounds.pad(0.25));
+      }
+    }, [showResult, selectedMarker, correctAnswer, map]);
+
+    return null;
   }
 
   return (
@@ -38,10 +55,14 @@ function SchoolMap({ selectedMarker, onMarkerChange }: SchoolMapProps) {
       />
       <ZoomControl position="bottomright" />
 
-      {/* Render the marker component; this handles clicks and renders one marker */}
-      <MapMarkers selectedMarker={selectedMarker} onMarkerChange={onMarkerChange} />
+      <AutoZoomOnResult />
 
-      <HandleMapEvents />
+      <MapMarkers
+        selectedMarker={selectedMarker}
+        onMarkerChange={onMarkerChange}
+        correctAnswer={correctAnswer}
+        showResult={showResult}
+      />
     </MapContainer>
   );
 }
