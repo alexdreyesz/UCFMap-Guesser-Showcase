@@ -36,8 +36,9 @@ router.post("/create", upload.single('image'), async (req: express.Request, res:
     console.log("req.file: ", req.file.path);
     console.log("req.file: ", req.file);
     if (req.isAuthenticated()) {
-      const { location, imageURL }: UCFMapGeoQuestion = req.body;
-      if (!location || !(imageURL || req.file.path)) {
+      const { location }: UCFMapGeoQuestion = req.body;
+      const imageURL = req.file ? req.file.path : req.body.imageURL; // Use the file path from multer
+      if (!location || !imageURL) {
         res.status(400).json({ error: "Missing required fields" });
         return;
       }
