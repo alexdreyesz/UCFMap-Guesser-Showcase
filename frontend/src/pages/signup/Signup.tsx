@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import Header from "../../components/header/Header";
+import backB from "../../assets/icons/Back-Button.png";
 import "./Signup.css";
 import React, { useState } from "react";
 /*
@@ -6,31 +8,27 @@ To-do
 add link to login after user is created
 get password check to be instant. (as the user types)
 */
+let locks = [2, 2, 2, 2]; // [0]username error..
 function Signup() {
-  const [message, setMessage] = React.useState("");
-  const [userName, setLoginName] = React.useState("");
-  const [userPassword, setPassword] = React.useState("");
-  const [userEmail, setEmail] = React.useState("");
-  const [userCheck, setCheck] = React.useState("");
+  const [message, setMessage] = React.useState(""); // msg
+  const [userName, setLoginName] = React.useState(""); //Login name
+  const [userPassword, setPassword] = React.useState(""); //password
+  const [userEmail, setEmail] = React.useState(""); // email
+  const [userCheck, setCheck] = React.useState(""); //pasword check
 
   //Do sign in Function
-  async function startSignIn(event: React.FormEvent): Promise<void> {
+  async function startSignIn(event: any): Promise<void> {
     event.preventDefault();
-    //get values fields [0] login name, [1] password, [2] email, [3] password check
     setMessage("");
-    const fields: string[] = [userName, userPassword, userEmail, userCheck];
-    const result = field_Check(fields);
+    const result = checkKey();
     if (result.check) {
       // if field check fails return and display an errm
       setMessage(result.fault);
       return;
     }
+    //alert(`You got past me: ${locks[0]}`);
     //package json
-     const jsPack = JSON.stringify({
-      username: fields[0],
-      password: fields[1],
-      email: fields[2],
-    });
+    const jsPack = JSON.stringify({ email: userEmail, password: userPassword, username: userName });
 
     //try to send off the package
     try {
@@ -41,63 +39,131 @@ function Signup() {
         body: jsPack,
         headers: { "Content-Type": "application/json" },
       });
-      const reply = await response.json();
-    if (!response.ok) {
-      setMessage(reply.message || "It's possible this user already exists.");
-    } else  {
-      setMessage("User successfully added. Please login.");
-    }
+      const reply = JSON.parse(await response.text()); // this should have the text
+      if (reply.success) {
+        setMessage(reply.message);
+      } else {
+        setMessage(reply.message);
+      }
     } catch (error: any) {
       alert(error.toString());
       return;
     }
   }
   function handleSetLoginName(e: any): void {
-    setLoginName(e.target.value);
+    const val = e.target.value;
+    console.log("enter handle:" + locks[0]);
+
+    if (val != "") {
+      locks[0] = 1;
+      setLoginName(val);
+    } else {
+      locks[0] = 0;
+    }
+    console.log("Leaving handle:" + locks[0]);
   }
   function handleSetPassword(e: any): void {
-    setPassword(e.target.value);
+    const val = e.target.value;
+    const regex = /^(?=.*\d).{9,}$/;
+
+    if (regex.test(val)) {
+      setPassword(val);
+      locks[1] = 1;
+    } else locks[1] = 0;
   }
   function handleSetPasswordCheck(e: any): void {
-    setCheck(e.target.value);
+    const val = e.target.value;
+    if (userPassword == "") return;
+    if (userPassword === val) {
+      setCheck(e.target.value);
+      locks[2] = 1;
+    } else locks[2] = 0;
   }
   function handleSetEmail(e: any): void {
-    setEmail(e.target.value);
+    const val = e.target.value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(val)) {
+      locks[3] = 1;
+      setEmail(e.target.value);
+    } else locks[3] = 0;
+  }
+
+  function checkKey(): { check: boolean; fault?: string } {
+    let key = 0;
+    for (const num of locks) {
+      key += num;
+    }
+    if (key == 4) return { check: false };
+    else {
+      return {
+        check: true,
+        fault: "Make sure all fields are satisfied.",
+      };
+    }
   }
   return (
     <>
+      <title>Join Us</title>
       <Header />
       <div className="signin-container">
+        <Link to="/login">
+          <img className="back-button-image" src={backB} style={{ cursor: "pointer" }} />
+        </Link>
         <div className="signin-box">
           <div className="signin-title">Join UCFMap Guessr</div>
-          <input
-            type="text"
-            className="signin-input"
-            placeholder="Username"
-            onChange={handleSetLoginName}
-            value={userName}
-          />
-          <input
-            type="password"
-            className="signin-input"
-            placeholder="Password"
-            onChange={handleSetPassword}
-            value={userPassword}
-          />
-          <input
-            type="password"
-            className="signin-input"
-            placeholder="Re-enter Password"
-            onChange={handleSetPasswordCheck}
-            value={userCheck}
-          />
-          <input
-            type="email"
-            className="signin-input"
-            placeholder="NewUser@example.com"
-            onChange={handleSetEmail}
-            value={userEmail}
-          />
+
+          <label className="signin-text-label">
+            <strong>Username</strong>
+            <input
+              type="text"
+              className="signin-input"
+              placeholder="Username"
+              onChange={handleSetLoginName}
+            />
+            <div className="sigin-text-input">
+              {locks[0] == 0 && <p className="fault-message">Username is empty</p>}
+            </div>
+          </label>
+
+          <label className="signin-text-label">
+            <strong>Password</strong>
+            <input
+              type="password"
+              className="signin-input"
+              placeholder="Password"
+              onChange={handleSetPassword}
+            />
+            <div className="sigin-text-input">
+              Password must be {">"}'8 and include 1 number.
+              {locks[1] == 0 && (
+                <p className="fault-message">Password does not meet the requirments</p>
+              )}
+            </div>
+          </label>
+          <label className="signin-text-label">
+            <strong>Re-Enter Password</strong>
+            <input
+              type="password"
+              className="signin-input"
+              placeholder="Re-enter Password"
+              onChange={handleSetPasswordCheck}
+            />
+            <div className="sigin-text-input">
+              {locks[2] == 0 && <p className="fault-message">Passwords do not match</p>}
+            </div>
+          </label>
+          <label className="signin-text-label">
+            <strong>Email</strong>
+            <input
+              type="email"
+              className="signin-input"
+              placeholder="NewUser@example.com"
+              onChange={handleSetEmail}
+            />
+            <div className="sigin-text-input">
+              {locks[3] == 0 && <p className="fault-message">This is not a valid email</p>}
+            </div>
+          </label>
           <button className="signup-button" onClick={startSignIn}>
             Sign Up
           </button>
@@ -108,35 +174,4 @@ function Signup() {
   );
 }
 
-function field_Check(arry: string[]): { check: boolean; fault?: string } {
-  // checks fields to ensure they are filled out properly
-  //takes in a array that holds each field for sign up
-  //e.g name, password[hashed], email
-  //first check for empty fields
-  for (let item of arry) {
-    if (item === "") {
-      return {
-        check: true,
-        fault: "Please make sure to fill out all fields",
-      };
-    }
-  }
-
-  //password check
-  if (arry[1] !== arry[3]) {
-    return {
-      check: true,
-      fault: "Passwords do not match",
-    };
-  }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //email check
-  if (!emailRegex.test(arry[2])) {
-    return {
-      check: true,
-      fault: "This is not a vaild email",
-    };
-  }
-  return { check: false };
-}
 export default Signup;

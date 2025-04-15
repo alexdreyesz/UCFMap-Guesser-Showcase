@@ -10,6 +10,7 @@ grey: #f8f8f8
 /* Login.css */
 .login-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -32,7 +33,7 @@ grey: #f8f8f8
 }
 
 .login-title {
-  color:#000000;
+  color: #000000;
   font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
@@ -54,7 +55,7 @@ grey: #f8f8f8
   height: 3rem;
   flex-shrink: 0;
   border-radius: 0.7rem;
-  border: 2px solid #FFF;
+  border: 2px solid #fff;
   background: #ffc904;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
@@ -63,13 +64,17 @@ grey: #f8f8f8
   background-color: #b68f03;
 }
 
-.signUp-link {
-
+.signup-link-text {
+  font-size: 2rem !important;
+  font-weight: bold;
+  margin-top: 1rem;
+  display: flex;
+  text-decoration: underline;
 }
 
 .error-message {
   color: red;
-  font-size: 1rem !important; 
+  font-size: 1rem !important;
   font-weight: bold;
   margin-top: 1rem;
   text-align: center;

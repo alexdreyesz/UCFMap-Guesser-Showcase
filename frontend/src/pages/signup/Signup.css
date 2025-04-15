@@ -12,13 +12,13 @@ grey: #f8f8f8
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 150vh;
   background-color: #f0f2f5;
 }
 
 .signin-box {
   background-color: white;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 12px;
   box-shadow: 1 4px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -40,11 +40,36 @@ grey: #f8f8f8
 
 .signin-input {
   width: 100%;
+  max-width: 250px;
   padding: 0.75rem;
-  margin-bottom: 1rem;
   border-radius: 6px;
   border: 1px solid #000000;
   font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.signin-text-input {
+  /* this is the small gray text under fields */
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  text-align: left;
+  font-weight: bold;
+  color: #414141;
+  font-size: 0.75rem;
+}
+
+.signin-text-label {
+  /* for labling the boxes */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex-shrink: 0;
+  margin-bottom: 1rem;
+  justify-content: left;
+  align-items: center;
+  text-align: left;
 }
 
 .signup-button {
@@ -65,11 +90,17 @@ grey: #f8f8f8
 
 .back-button-image {
   position: relative;
-  bottom: -10px;
-  align-self: left;
+  margin-bottom: auto;
+  align-self: last baseline;
   flex-shrink: 0;
   width: 4rem;
   height: 4rem;
+}
+.fault-message {
+  color: red;
+  font-size: 0.75rem !important;
+  font-weight: bold;
+  text-align: center;
 }
 
 .error-message {
