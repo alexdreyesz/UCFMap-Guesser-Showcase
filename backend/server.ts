@@ -92,6 +92,8 @@ function startProdServer() {
   const frontendPath = path.resolve(__dirname, "../frontend");
   console.log("frontendPath", frontendPath);
   app.use(express.static(frontendPath));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // Add session middleware
   app.use(
