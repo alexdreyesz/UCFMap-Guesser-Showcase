@@ -14,7 +14,8 @@ function Signup() {
   const [userCheck, setCheck] = React.useState("");
 
   //Do sign in Function
-  async function startSignIn(event: any): Promise<void> {
+  async function startSignIn(event: React.FormEvent): Promise<void> {
+    event.preventDefault();
     //get values fields [0] login name, [1] password, [2] email, [3] password check
     setMessage("");
     const fields: string[] = [userName, userPassword, userEmail, userCheck];
@@ -25,12 +26,16 @@ function Signup() {
       return;
     }
     //package json
-    const jsPack = JSON.stringify({ login: fields[0], password: fields[1], email: fields[2] });
+     const jsPack = JSON.stringify({
+      username: fields[0],
+      password: fields[1],
+      email: fields[2],
+    });
 
     //try to send off the package
     try {
       //set response
-      const response = await fetch("http://localhost:80/api/signup", {
+      const response = await fetch("/api/register", {
         // Need to replace with api code
         method: "POST",
         body: jsPack,
