@@ -25,7 +25,7 @@ export default function TestUpload() {
       formData.append("image", image);
     }
     try {
-      const response = await fetch("/api/treasures/treasure", {
+      const response = await fetch("/api/treasures/create", {
         method: "POST",
         body: formData,
       });
