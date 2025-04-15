@@ -35,7 +35,7 @@ function Signup() {
     //try to send off the package
     try {
       //set response
-      const response = await fetch("/api/register", {
+      const response = await fetch("http://ucfmap.evanpartidas.com/api/register", {
         // Need to replace with api code
         method: "POST",
         body: jsPack,
