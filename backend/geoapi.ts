@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import multer from "multer";
 import { createGeoQuestion, deleteAllGeoQuestions, deleteGeoQuestion, getAllGeoQuestions, getGeoQuestionById, getRandomGeoQuestion } from "./database/geoquestionts.js";
 
@@ -55,7 +55,7 @@ router.post("/create", upload.single('image'), async (req: express.Request, res:
 });
 
 //get a treasure by id
-router.get("/treasure/:treasureId", async (req: express.Request, res: express.Response): Promise<void> => {
+router.get("/treasures/:treasureId", async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const { treasureId } = req.params;
     const treasure = await getGeoQuestionById(treasureId);
@@ -86,7 +86,7 @@ router.get("/treasures", async (req: express.Request, res: express.Response): Pr
 });
 
 //get a random treasure
-router.get("/treasure/random", async (req: express.Request, res: express.Response): Promise<void> => {
+router.get("/treasures/random", async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const treasure = await getRandomGeoQuestion();
     if (!treasure) {
@@ -101,7 +101,7 @@ router.get("/treasure/random", async (req: express.Request, res: express.Respons
 });
 
 //delete a treasure by id
-router.delete("/treasure/:treasureId", async (req: express.Request, res: express.Response): Promise<void> => {
+router.delete("/treasures/:treasureId", async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const { treasureId } = req.params;
     const deletedTreasure = await deleteGeoQuestion(treasureId);
@@ -122,6 +122,26 @@ router.post("/deleteAllTreasures", async (req: express.Request, res: express.Res
     res.json({ success: true });
   } catch (e) {
     res.status(500).json({ success: false, error: e });
+  }
+});
+
+router.post("/guesses", async (req: express.Request, res: express.Response) => {
+  try {
+    const { latitude, longitude, userID } = req.body;
+    if (typeof latitude !== "number"
+      || typeof longitude !== "number"
+      || typeof userID !== "string"
+    ) {
+      return res.status(400).json({ error: "Invalid payload" });
+    }
+    console.log("Received guess:", { userID, latitude, longitude });
+    return res.status(201).json({
+      success: true,
+      guess: { userID, latitude, longitude },
+    });
+  } catch (err: any) {
+    console.error("Error in /guesses:", err);
+    return res.status(500).json({ error: "Server error saving guess" });
   }
 });
 
