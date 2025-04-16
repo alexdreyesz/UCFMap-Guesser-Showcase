@@ -42,6 +42,17 @@ export default function TestUpload() {
     }
   };
 
+  const deleteAllGeoQuestionsInDatabase = async () => {
+    const response = await fetch("/api/treasures/deleteAllTreasures", { method: "POST" });
+    const json = await response.json();
+    if (response.ok && json.success) {
+      console.log("All geo questions deleted successfully");
+      alert("All geo questions deleted successfully");
+    } else {
+      alert(`Error deleting geo questions: ${json.error}`);
+    }
+  };
+
   return (
     // page code goes here
     <>
@@ -73,7 +84,11 @@ export default function TestUpload() {
           />
 
           <button onClick={handleSubmit} className="login-button">
-            Login
+            Create
+          </button>
+
+          <button onClick={deleteAllGeoQuestionsInDatabase} className="login-button">
+            CLEAR GEOQUESTIONS IN DATABASE
           </button>
           <div className="error-message">{errorMessage}</div>
         </div>
