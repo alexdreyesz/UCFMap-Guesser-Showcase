@@ -6,101 +6,86 @@ import React, { useRef, useState } from "react";
 import noImageIcon from "../../assets/icons/no-image-icon.png";
 import clip from "../../assets/icons/clip.png";
 
-// this is the main part of the create window, holds everything
 function CreateWindow() {
   const [imgUrl, setUrl] = React.useState(noImageIcon);
   const [image, setImage] = useState<File | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<LatLngExpression | null>(null);
+  const [localName, setLocalName] = useState("");
   const [message, setMessage] = React.useState("");
-  const navigate = useNavigate();
-
-  interface MapMarkersProps {
-    selectedMarker: LatLngExpression | null;
-    onMarkerChange: (marker: LatLngExpression | null) => void;
-  }
-
   const [hasImageError, setHasImageError] = useState(false);
+  const navigate = useNavigate();
 
   function runImage(e: any): void {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
       setImage(file);
-      setHasImageError(false); // Reset error state
+      setHasImageError(false);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUrl(reader.result);
+        if (reader.result) {
+          setUrl(reader.result as string);
+        }
       };
       reader.readAsDataURL(file);
     } else {
-      setHasImageError(true); // Trigger error state if it's not an image
-      setUrl("../../assets/icons/no-image-icon.png");
+      setHasImageError(true);
+      setUrl(noImageIcon);
     }
   }
 
-  // Submit Info
   async function runSubmit(event: any): Promise<void> {
     event.preventDefault();
-    setMessage("");
-    if (!selectedMarker || !image) {
-      // if there is no marker, image  or location name
-      setMessage("Please make sure you have a image and a location set.");
+
+    if (!selectedMarker || !image || !localName.trim()) {
+      alert("Please upload an image, name it, and select a location.");
       return;
     }
-    const localPack = {
-      latitude: (selectedMarker as LatLng).lat,
-      longitude: (selectedMarker as LatLng).lng,
-    };
-    const jsPack = {
-      location: JSON.stringify(localPack),
-      image: image,
-    };
+
+    const [lat, lng] = Array.isArray(selectedMarker)
+      ? selectedMarker
+      : [(selectedMarker as any).lat, (selectedMarker as any).lng];
+
+    const formData = new FormData();
+    formData.append("location", JSON.stringify({ latitude: lat, longitude: lng }));
+    formData.append("image", image);
+    formData.append("name", localName.trim());
+
     try {
-      //set response
       const response = await fetch("/api/treasures/create", {
-        // Need to replace with api code
         method: "POST",
-        body: JSON.stringify(jsPack),
-        headers: { "Content-Type": "application/json" },
+        body: formData,
       });
-      const reply = JSON.parse(await response.text()); // this should have the text
-      if (reply.status == 401) {
-        // we may not have a user id, so maybe this needs to be a status check
-        const errorData = await response.json();
-        alert(errorData.error || "Error uploading image");
-      } //
-      else {
-        //create user cache/cookie
-        //stores username as UserName and UserEmail
-        setMessage("Submition complete");
-        //returns home
+
+      const reply = await response.json();
+
+      if (!response.ok) {
+        alert(reply.error || "Error uploading treasure.");
+        return;
       }
+
+      alert("Treasure created successfully!");
     } catch (error: any) {
+      console.error("Submit error:", error);
       alert(error.toString());
-      return;
     }
   }
 
+  // Zoom & Drag logic for image
   const [scale, setScale] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const dragStart = useRef({ x: 0, y: 0 });
 
-  const handleZoomIn = () => {
-    setScale((prev) => Math.min(prev + 0.1, 3));
-  };
-
+  const handleZoomIn = () => setScale((prev) => Math.min(prev + 0.1, 3));
   const handleZoomOut = () => {
-    setScale((prev) => Math.max(prev - 0.1, 1)); // prevent scaling below original
-    setPosition({ x: 0, y: 0 }); // reset position when zooming out fully
+    setScale((prev) => Math.max(prev - 0.1, 1));
+    setPosition({ x: 0, y: 0 });
   };
 
   const handleMouseDown = (e) => {
     if (scale <= 1) return;
     setIsDragging(true);
-    dragStart.current = {
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
-    };
+    dragStart.current = { x: e.clientX - position.x, y: e.clientY - position.y };
   };
 
   const handleMouseMove = (e) => {
@@ -111,12 +96,7 @@ function CreateWindow() {
     });
   };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const [xCoordinate, xCoordinateSet] = useState(1);
-  const [yCoordinate, yCoordinateSet] = useState(1);
+  const handleMouseUp = () => setIsDragging(false);
 
   return (
     <>
@@ -159,7 +139,6 @@ function CreateWindow() {
               <label htmlFor="file-upload" className="upload-img-input-label">
                 <img src={clip} className="upload-clip" />
               </label>
-
               <input
                 type="file"
                 id="file-upload"
@@ -177,6 +156,18 @@ function CreateWindow() {
                 -
               </button>
             </div>
+          </div>
+
+          <div className="input-name-container">
+            <label htmlFor="location-name">Location Name:</label>
+            <input
+              id="location-name"
+              type="text"
+              placeholder="e.g. Pegasus Seal"
+              value={localName}
+              onChange={(e) => setLocalName(e.target.value)}
+              className="location-name-input"
+            />
           </div>
         </div>
 
