@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { LatLngExpression, LatLng } from "leaflet";
 import SchoolMap from "../map/map";
 import React, { useRef, useState } from "react";
-import geoImage from "../../assets/images/ucf-background.jpg";
-import clip from "../../assets/icons/clip.png"
+import noImageIcon from "../../assets/icons/no-image-icon.png";
+import clip from "../../assets/icons/clip.png";
 
 // this is the main part of the create window, holds everything
 function CreateWindow() {
-  const [imgUrl, setUrl] = React.useState("../../assets/icons/no-image-icon.png");
+  const [imgUrl, setUrl] = React.useState(noImageIcon);
   const [image, setImage] = useState<File | null>(null);
   const [localName, setName] = React.useState("");
   const [selectedMarker, setSelectedMarker] = useState<LatLngExpression | null>(null);
@@ -24,17 +24,20 @@ function CreateWindow() {
     setName(e.target.value);
   }
 
+  const [hasImageError, setHasImageError] = useState(false);
+
   function runImage(e: any): void {
     const file = e.target.files[0];
-
     if (file && file.type.startsWith("image/")) {
       setImage(file);
+      setHasImageError(false); // Reset error state
       const reader = new FileReader();
       reader.onloadend = () => {
         setUrl(reader.result);
       };
       reader.readAsDataURL(file);
     } else {
+      setHasImageError(true); // Trigger error state if it's not an image
       setUrl("../../assets/icons/no-image-icon.png");
     }
   }
@@ -84,16 +87,16 @@ function CreateWindow() {
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const dragStart = useRef({ x: 0, y: 0 });
-  
+
   const handleZoomIn = () => {
     setScale((prev) => Math.min(prev + 0.1, 3));
   };
-  
+
   const handleZoomOut = () => {
     setScale((prev) => Math.max(prev - 0.1, 1)); // prevent scaling below original
     setPosition({ x: 0, y: 0 }); // reset position when zooming out fully
   };
-  
+
   const handleMouseDown = (e) => {
     if (scale <= 1) return;
     setIsDragging(true);
@@ -102,7 +105,7 @@ function CreateWindow() {
       y: e.clientY - position.y,
     };
   };
-  
+
   const handleMouseMove = (e) => {
     if (!isDragging) return;
     setPosition({
@@ -110,7 +113,7 @@ function CreateWindow() {
       y: e.clientY - dragStart.current.y,
     });
   };
-  
+
   const handleMouseUp = () => {
     setIsDragging(false);
   };
@@ -142,8 +145,9 @@ function CreateWindow() {
             onDragStart={(e) => e.preventDefault()}
           >
             <img
+              onError={() => setHasImageError(true)}
               className="geo-image"
-              src={geoImage}
+              src={imgUrl}
               draggable={false}
               onDragStart={(e) => e.preventDefault()}
               style={{
