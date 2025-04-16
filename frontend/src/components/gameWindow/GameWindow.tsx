@@ -8,8 +8,8 @@ import geoImage from "../../assets/images/ucf-pegasus-mural.jpg";
 function GameWindow() {
   const [selectedMarker, setSelectedMarker] = useState<LatLngExpression | null>(null);
   const [correctAnswer, setCorrectAnswer] = useState<LatLngExpression | null>(null);
-  const [distance, setDistance] = useState<number | null>(null);
-  const [score, setScore] = useState<number | null>(null);
+  const [distance, setDistance] = useState(0);
+  const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
@@ -134,18 +134,23 @@ function GameWindow() {
     setIsDragging(false);
   };
 
+  const [round, setRound] = useState(1);
+
+  function nextRound() {
+    setRound((prev) => (prev < 3 ? prev + 1 : 1));
+  }
+
+
   return (
     <>
       <div className="game-window-container">
         <div>
-          <div className="text-rounds-container">
-            <p>Round 1</p>
+          <div className="game-text-rounds-container">
+            <p className={round === 1 ? "round-1 current-round" : "round-1"}>Round 1</p>
             <p>&nbsp;&nbsp;|&nbsp;&nbsp;</p>
-            <p>
-              <strong>Round 2</strong>
-            </p>
+            <p className={round === 2 ? "round-2 current-round" : "round-2"}>Round 2</p>
             <p>&nbsp;&nbsp;|&nbsp;&nbsp;</p>
-            <p>Round 3</p>
+            <p className={round === 3 ? "round-3 current-round" : "round-3"}>Round 3</p>
           </div>
 
           <div
@@ -182,8 +187,8 @@ function GameWindow() {
         </div>
 
         <div>
-          <div className="text-ucfmap-container">
-            <p className="text-map-container">UCF MAP</p>
+          <div className="game-text-ucfmap-container">
+            <p className="game-text-map-container">UCF MAP</p>
           </div>
 
           <div className="game-window-box-map">
@@ -197,20 +202,23 @@ function GameWindow() {
         </div>
       </div>
 
-      <button className="submit-button" onClick={handleSubmit}>
-        SUBMIT
-      </button>
+      <div className="game-botton-container">
+        <button
+          className="game-submit-button"
+          onClick={() => {handleSubmit(); nextRound();}}
+        >
+          SUBMIT
+        </button>
 
-      {showResult && distance !== null && (
         <div className="distance-result">
           <p>
-            You were <strong>{(distance / 1000).toFixed(2)} km</strong> away.
+            Distance: <strong>{(distance / 1000).toFixed(2)} km</strong>
           </p>
           <p>
-            You earned <strong>{score}</strong> points!
+            Your Score: <strong>{score}</strong>
           </p>
         </div>
-      )}
+      </div>
     </>
   );
 }

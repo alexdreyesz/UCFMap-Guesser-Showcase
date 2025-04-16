@@ -42,6 +42,7 @@ function CreateWindow() {
     }
   }
 
+  // Submit Info
   async function runSubmit(event: any): Promise<void> {
     event.preventDefault();
     if (!selectedMarker || !localName || !image) {
@@ -118,22 +119,29 @@ function CreateWindow() {
     setIsDragging(false);
   };
 
+  const [round, setRound] = useState(1);
+
+  function nextRound() {
+    setRound((prev) => (prev < 3 ? prev + 1 : 1));
+  }
+
+  const [xCoordinate, xCoordinateSet] = useState(1);
+  const [yCoordinate, yCoordinateSet] = useState(1);
+
   return (
     <>
-      <div className="text-rounds-container">
-        <p>Round 1</p>
+      <div className="create-text-rounds-container">
+        <p className={round === 1 ? "round-1 current-round" : "round-1"}>Round 1</p>
         <p>&nbsp;&nbsp;|&nbsp;&nbsp;</p>
-        <p>
-          <div className="current-round">Round 2</div>
-        </p>
+        <p className={round === 2 ? "round-2 current-round" : "round-2"}>Round 2</p>
         <p>&nbsp;&nbsp;|&nbsp;&nbsp;</p>
-        <p>Round 3</p>
+        <p className={round === 3 ? "round-3 current-round" : "round-3"}>Round 3</p>
       </div>
 
       <div className="game-window-container">
         <div>
           <div className="image-rounds-container">
-            <p>Upload A Picture</p>
+            <p>Upload An Image</p>
           </div>
 
           <div
@@ -190,12 +198,25 @@ function CreateWindow() {
           </div>
 
           <div className="game-window-box-map">
-            <SchoolMap selectedMarker={selectedMarker} onMarkerChange={setSelectedMarker} />
+            <SchoolMap
+              selectedMarker={selectedMarker}
+              onMarkerChange={setSelectedMarker}
+              correctAnswer={null}
+              showResult={false}
+            />
           </div>
         </div>
       </div>
 
-      <button className="submit-button">SUBMIT</button>
+      <button
+        className="submit-button"
+        onClick={() => {
+          runSubmit(round, imgUrl, xCoordinate, yCoordinate);
+          nextRound();
+        }}
+      >
+        SUBMIT
+      </button>
     </>
   );
 }

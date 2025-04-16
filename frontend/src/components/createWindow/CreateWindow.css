@@ -56,7 +56,9 @@
   overflow: hidden;
 }
 
-.text-rounds-container {
+.create-text-rounds-container {
+  height: 10px;
+  
   display: flex;
   justify-content: center;
   align-self: center;
@@ -64,7 +66,7 @@
   cursor: default;
 
   position: relative;
-  top: 15px;
+  top: 0px;
 }
 
 .text-map-container {
@@ -86,7 +88,7 @@
 
 .submit-button {
   position: relative;
-  bottom: -10px;
+  bottom: -5px;
   align-self: center;
   width: 19rem;
   height: 3.5rem;
