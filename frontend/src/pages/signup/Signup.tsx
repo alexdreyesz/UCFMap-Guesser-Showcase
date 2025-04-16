@@ -1,7 +1,7 @@
 import "./Signup.css";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/header/Header";
-import React, { useState } from "react";
+import React from "react";
 
 /*
 To-do
@@ -15,6 +15,7 @@ function Signup() {
   const [userPassword, setPassword] = React.useState(""); //password
   const [userEmail, setEmail] = React.useState(""); // email
   const [userCheck, setCheck] = React.useState(""); //pasword check
+  const [isEmailValid, setIsEmailValid] = React.useState(true); // New state to track email validity
   const navigate = useNavigate();
 
   //Do Sign In Function
@@ -44,6 +45,18 @@ function Signup() {
       const reply = JSON.parse(await response.text()); // this should have the text
       if (reply.success) {
         setMessage(reply.message);
+
+        // clear fields
+        setLoginName("");
+        setPassword("");
+        setCheck("");
+        setEmail("");
+        locks = [2, 2, 2, 2];
+
+        setMessage("Account created successfully");
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
       } else {
         setMessage(reply.message);
         navigate("/");
@@ -93,10 +106,14 @@ function Signup() {
   function handleSetEmail(e: any): void {
     const val = e.target.value;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setEmail(val);
     if (emailRegex.test(val)) {
+      setIsEmailValid(true);
       locks[3] = 1;
-      setEmail(e.target.value);
-    } else locks[3] = 0;
+    } else {
+      setIsEmailValid(false);
+      locks[3] = 0;
+    }
   }
 
   // Function To Check Key
@@ -127,6 +144,7 @@ function Signup() {
               type="text"
               className="signin-input"
               placeholder="Username"
+              value={userName}
               onChange={handleSetLoginName}
             />
             <div className="sigin-text-input">
@@ -139,6 +157,7 @@ function Signup() {
               type="password"
               className="signin-input"
               placeholder="Password"
+              value={userPassword}
               onChange={handleSetPassword}
             />
             <div className="sigin-text-input">
@@ -152,6 +171,7 @@ function Signup() {
               type="password"
               className="signin-input"
               placeholder="Re-enter Password"
+              value={userCheck}
               onChange={handleSetPasswordCheck}
             />
             <div className="sigin-text-input">
@@ -163,10 +183,11 @@ function Signup() {
               type="email"
               className="signin-input"
               placeholder="NewUser@example.com"
+              value={userEmail}
               onChange={handleSetEmail}
             />
             <div className="sigin-text-input">
-              {locks[3] == 0 && <p className="fault-message">This is not a valid email</p>}
+              {!isEmailValid && <p className="fault-message">This is not a valid email</p>}
             </div>
           </label>
 
