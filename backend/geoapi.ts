@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //register a new treasure
-router.post("/create", upload.single('image'), async (req: express.Request, res: express.Response): Promise<void> => {
+router.post("/", upload.single('image'), async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     console.log("req.body: ", req.body);
     console.log("req.file: ", req.file.path);
@@ -55,7 +55,7 @@ router.post("/create", upload.single('image'), async (req: express.Request, res:
 });
 
 //get a treasure by id
-router.get("/treasures/:treasureId", async (req: express.Request, res: express.Response): Promise<void> => {
+router.get("/:treasureId", async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const { treasureId } = req.params;
     const treasure = await getGeoQuestionById(treasureId);
@@ -71,7 +71,7 @@ router.get("/treasures/:treasureId", async (req: express.Request, res: express.R
 });
 
 //get all treasures by id
-router.get("/treasures", async (req: express.Request, res: express.Response): Promise<void> => {
+router.get("/", async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const allGeoQuestions = await getAllGeoQuestions();
     if (!allGeoQuestions || allGeoQuestions.length === 0) {
@@ -86,7 +86,7 @@ router.get("/treasures", async (req: express.Request, res: express.Response): Pr
 });
 
 //get a random treasure
-router.get("/treasures/random", async (req: express.Request, res: express.Response): Promise<void> => {
+router.get("/random", async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const treasure = await getRandomGeoQuestion();
     if (!treasure) {
