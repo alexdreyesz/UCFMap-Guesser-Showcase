@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { createGeoQuestion, deleteGeoQuestion, getAllGeoQuestions, getGeoQuestionById, getRandomGeoQuestion } from "./database/geoquestionts.js";
+import { createGeoQuestion, deleteAllGeoQuestions, deleteGeoQuestion, getAllGeoQuestions, getGeoQuestionById, getRandomGeoQuestion } from "./database/geoquestionts.js";
 
 // Import Multer types
 import { File as MulterFile } from "multer";
@@ -115,6 +115,16 @@ router.delete("/treasure/:treasureId", async (req: express.Request, res: express
     res.status(500).json({ error: "Server error while deleting treasure" });
   }
 });
+
+router.post("/deleteAllTreasures", async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const response = await deleteAllGeoQuestions();
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e });
+  }
+});
+
 
 //export the router
 export default router;

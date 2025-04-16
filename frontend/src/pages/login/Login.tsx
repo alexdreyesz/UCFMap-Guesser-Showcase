@@ -47,21 +47,23 @@ function Login() {
         const usr = { loggedin: reply.loggedIn };
         localStorage.setItem("user_data", JSON.stringify(usr));
         //returns home
-        navigate("/");
+        navigate("/create");
       }
     } catch (error: any) {
       alert(error.toString());
       return;
     }
   }
+
   function handleSetLoginName(e: any): void {
     setLoginName(e.target.value);
   }
+
   function handleSetPassword(e: any): void {
     setPassword(e.target.value);
   }
+
   return (
-    // page code goes here
     <>
       <Header />
       <title>Log in</title>
@@ -81,11 +83,9 @@ function Login() {
             onChange={handleSetPassword}
           />
 
-          <Link to="/create">
           <button className="login-button" onClick={startLogin}>
             Login
           </button>
-          </Link>
 
           <div className="error-message">{message}</div>
         </div>

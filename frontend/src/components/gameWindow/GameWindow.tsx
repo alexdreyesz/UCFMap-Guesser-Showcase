@@ -12,6 +12,16 @@ function GameWindow() {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
+  interface Treasure {
+    id?: string;
+    location: {
+      longitude: number;
+      latitude: number;
+    };
+    imageURL: string;
+    authorId: string;
+  }
+
   useEffect(() => {
     // async function loadTreasure() {
     //   try {
@@ -94,6 +104,10 @@ function GameWindow() {
 
       const data = await response.json();
       console.log("Guess submitted successfully:", data);
+
+      // 👇 load a new treasure after submitting a guess
+      fetchRandomTreasure();
+      setShowResult(false); // reset result display for next round
     } catch (error) {
       console.error("Error submitting guess:", error);
     }
@@ -140,7 +154,37 @@ function GameWindow() {
     setRound((prev) => (prev < 3 ? prev + 1 : 1));
   }
 
+  
+  const [treasure, setTreasure] = useState<Treasure | null>(null);
+  const [error, setError] = useState<string>("");
 
+  // Fetch Random Treasure 
+  const fetchRandomTreasure = async () => {
+    try {
+      const response = await fetch("http://localhost:80/geoapi/treasure/random");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch treasure");
+      }
+
+      console.log("Hello");
+      const data: Treasure = await response.json();
+      console.log("Hello I am Here");
+      console.log("Treasure image URL:", data.imageURL);
+
+      setTreasure(data);
+      setCorrectAnswer([data.location.latitude, data.location.longitude]);
+      console.log("New treasure loaded:", data);
+    } catch (err: any) {
+      setError(err.message || "Unexpected error");
+    }
+  };
+
+  // Fetch Random Treasure On Page Load 
+  useEffect(() => {
+    fetchRandomTreasure();
+  }, []);
+  
   return (
     <>
       <div className="game-window-container">
@@ -163,7 +207,7 @@ function GameWindow() {
           >
             <img
               className="geo-image"
-              src={geoImage}
+              src={treasure?.imageURL}
               draggable={false}
               onDragStart={(e) => e.preventDefault()}
               style={{

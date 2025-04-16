@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
-import Header from "../../components/header/Header";
-import backB from "../../assets/icons/Back-Button.png";
 import "./Signup.css";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import Header from "../../components/header/Header";
 import React, { useState } from "react";
+
 /*
 To-do
 add link to login after user is created
@@ -15,8 +15,9 @@ function Signup() {
   const [userPassword, setPassword] = React.useState(""); //password
   const [userEmail, setEmail] = React.useState(""); // email
   const [userCheck, setCheck] = React.useState(""); //pasword check
+  const navigate = useNavigate();
 
-  //Do sign in Function
+  //Do Sign In Function
   async function startSignIn(event: any): Promise<void> {
     event.preventDefault();
     setMessage("");
@@ -39,17 +40,21 @@ function Signup() {
         body: jsPack,
         headers: { "Content-Type": "application/json" },
       });
+
       const reply = JSON.parse(await response.text()); // this should have the text
       if (reply.success) {
         setMessage(reply.message);
       } else {
         setMessage(reply.message);
+        navigate("/");
       }
     } catch (error: any) {
       alert(error.toString());
       return;
     }
   }
+
+  // Function To Handle Set Login Name
   function handleSetLoginName(e: any): void {
     const val = e.target.value;
     console.log("enter handle:" + locks[0]);
@@ -62,6 +67,8 @@ function Signup() {
     }
     console.log("Leaving handle:" + locks[0]);
   }
+
+  // Function To Handle Set Password
   function handleSetPassword(e: any): void {
     const val = e.target.value;
     const regex = /^(?=.*\d).{9,}$/;
@@ -71,6 +78,8 @@ function Signup() {
       locks[1] = 1;
     } else locks[1] = 0;
   }
+
+  // Function to Handle Set Password Check
   function handleSetPasswordCheck(e: any): void {
     const val = e.target.value;
     if (userPassword == "") return;
@@ -79,6 +88,8 @@ function Signup() {
       locks[2] = 1;
     } else locks[2] = 0;
   }
+
+  // Fucntion To Handle Set Email
   function handleSetEmail(e: any): void {
     const val = e.target.value;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -88,6 +99,7 @@ function Signup() {
     } else locks[3] = 0;
   }
 
+  // Function To Check Key
   function checkKey(): { check: boolean; fault?: string } {
     let key = 0;
     for (const num of locks) {
@@ -101,6 +113,7 @@ function Signup() {
       };
     }
   }
+
   return (
     <>
       <title>Join Us</title>
@@ -157,11 +170,9 @@ function Signup() {
             </div>
           </label>
 
-          <Link to="/create">
-            <button className="signup-button" onClick={startSignIn}>
-              Sign Up
-            </button>
-          </Link>
+          <button className="signup-button" onClick={startSignIn}>
+            Sign Up
+          </button>
 
           <div className="error-message">{message}</div>
         </div>

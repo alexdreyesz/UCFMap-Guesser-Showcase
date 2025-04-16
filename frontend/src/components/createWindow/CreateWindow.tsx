@@ -36,8 +36,8 @@ function CreateWindow() {
   async function runSubmit(event: any): Promise<void> {
     event.preventDefault();
 
-    if (!selectedMarker || !image || !localName.trim()) {
-      alert("Please upload an image, name it, and select a location.");
+    if (!selectedMarker || !image) {
+      alert("Please upload an image and select a location.");
       return;
     }
 
@@ -48,7 +48,6 @@ function CreateWindow() {
     const formData = new FormData();
     formData.append("location", JSON.stringify({ latitude: lat, longitude: lng }));
     formData.append("image", image);
-    formData.append("name", localName.trim());
 
     try {
       const response = await fetch("/api/treasures/create", {
@@ -100,12 +99,6 @@ function CreateWindow() {
 
   return (
     <>
-      <div className="text-rounds-container">
-        <p>
-          <strong>Upload an Image. Then click the location on the map to set the marker</strong>
-        </p>
-      </div>
-
       <div className="game-window-container">
         <div>
           <div className="image-rounds-container">
@@ -156,18 +149,6 @@ function CreateWindow() {
                 -
               </button>
             </div>
-          </div>
-
-          <div className="input-name-container">
-            <label htmlFor="location-name">Location Name:</label>
-            <input
-              id="location-name"
-              type="text"
-              placeholder="e.g. Pegasus Seal"
-              value={localName}
-              onChange={(e) => setLocalName(e.target.value)}
-              className="location-name-input"
-            />
           </div>
         </div>
 
