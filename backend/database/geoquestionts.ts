@@ -7,8 +7,9 @@ export type UCFMapGeoQuestion = {
   authorId: string
 };
 
+//mongood model
 const GeoQuestion = mongoose.model(
-  "Teasures",
+  "Treasures",
   new mongoose.Schema<UCFMapGeoQuestion>({
     location: {
       type: {
