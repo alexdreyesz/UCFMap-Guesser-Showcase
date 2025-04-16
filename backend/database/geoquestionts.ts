@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { DeleteResult } from "mongoose";
 
 export type UCFMapGeoQuestion = {
   id?: string;
@@ -131,8 +131,9 @@ export async function getAllGeoQuestions(): Promise<UCFMapGeoQuestion[]> {
 }
 
 
-
-
+export async function deleteAllGeoQuestions(): Promise<DeleteResult> {
+  return await GeoQuestion.deleteMany({});
+}
 
 
 

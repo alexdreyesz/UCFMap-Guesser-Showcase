@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { createGeoQuestion, deleteGeoQuestion, getGeoQuestionById, getRandomGeoQuestion, UCFMapGeoQuestion, getAllGeoQuestions } from "./database/geoquestionts.js";
+import { createGeoQuestion, deleteGeoQuestion, getAllGeoQuestions, getGeoQuestionById, getRandomGeoQuestion } from "./database/geoquestionts.js";
 
 // Import Multer types
 import { File as MulterFile } from "multer";
@@ -36,9 +36,9 @@ router.post("/create", upload.single('image'), async (req: express.Request, res:
     console.log("req.file: ", req.file.path);
     console.log("req.file: ", req.file);
     if (req.isAuthenticated()) {
-      const { location }: UCFMapGeoQuestion = req.body;
+      const location = JSON.parse(req.body.location);
       const imageURL = req.file ? req.file.path : req.body.imageURL; // Use the file path from multer
-      if (!location || !imageURL) {
+      if (!location || !imageURL || !location.longitude || !location.latitude) {
         res.status(400).json({ error: "Missing required fields" });
         return;
       }

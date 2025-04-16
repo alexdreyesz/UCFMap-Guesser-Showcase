@@ -7,6 +7,7 @@ import passport from "passport";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { apiRouter } from "./api.js";
+import { getRandomGeoQuestion } from "./database/geoquestionts.js";
 
 
 config();
@@ -28,6 +29,9 @@ mongoose.connect(process.env.DATABASE_URL, {
 })
   .then(() => {
     console.log("Connected");
+    getRandomGeoQuestion().then((geoQuestion) => {
+      console.log("Random Geo Question:", geoQuestion);
+    });
   })
   .catch((e) => {
     console.log(e);
