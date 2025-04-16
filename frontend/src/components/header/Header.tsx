@@ -9,9 +9,9 @@ function Header() {
       <div className="container-header-left">
         <img className="ucf-logo" draggable={false} src={UCFLogo} alt="UCF Logo" />
         <Link to="/create">
-          <p className="ucf-title">
+          <div className="ucf-title">
             &nbsp;&nbsp;&nbsp;UCFMAP&nbsp;<p className="guessr-title"> Guessr</p>
-          </p>
+          </div>
         </Link>
       </div>
 
