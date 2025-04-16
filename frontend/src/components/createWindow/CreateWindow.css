@@ -1,4 +1,4 @@
-.game-window-container{
+.game-window-container {
   width: auto;
   height: 460px;
   display: flex;
@@ -8,7 +8,7 @@
 
 .current-round {
   font-weight: bold !important;
-  color: #F4BE0D !important;
+  color: #f4be0d !important;
 }
 
 .image-rounds-container {
@@ -23,7 +23,7 @@
   flex-shrink: 0;
 
   border-radius: 1.25rem;
-  border: 1px solid #9B9393;
+  border: 1px solid #9b9393;
   background: lightgray 50% / cover no-repeat;
 
   display: flex;
@@ -46,7 +46,7 @@
 
   background: lightgray 50%;
   border-radius: 1.25rem;
-  border: 1px solid #9B9393;
+  border: 1px solid #9b9393;
 
   display: flex;
   justify-content: center;
@@ -98,8 +98,8 @@
   color: white;
 
   border-radius: 0.7rem;
-  border: 2px solid #FFF;
-  background: #F4BE0D;
+  border: 2px solid #fff;
+  background: #f4be0d;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
@@ -116,11 +116,11 @@
   transform: translate(205px, 308px) rotate(90deg) scale(0.56);
 
   display: flex;
-  justify-content:space-evenly;
+  justify-content: space-evenly;
   align-items: center;
 
   border-radius: 0.9375rem;
-  background: rgba(248, 249, 250, 0.70);
+  background: rgba(248, 249, 250, 0.7);
 }
 
 .box-button-button {
@@ -129,8 +129,8 @@
   flex-shrink: 0;
 
   border-radius: 0.7rem;
-  border: 2px solid #FFF;
-  background: #F4BE0D;
+  border: 2px solid #fff;
+  background: #f4be0d;
 
   transform: rotate(90deg);
 
@@ -151,11 +151,11 @@
   transform: translate(-190px, 310px);
 
   display: flex;
-  justify-content:space-evenly;
+  justify-content: space-evenly;
   align-items: center;
 
   border-radius: 0.9375rem;
-  background: rgba(248, 249, 250, 0.70); 
+  background: rgba(248, 249, 250, 0.7);
 }
 
 .upload-img-input {
@@ -168,8 +168,8 @@
   flex-shrink: 0;
 
   border-radius: 0.7rem;
-  border: 2px solid #FFF;
-  background: #F4BE0D;
+  border: 2px solid #fff;
+  background: #f4be0d;
 
   display: flex;
   justify-content: center;
@@ -189,4 +189,11 @@
   width: 30px;
   height: 30px;
   filter: invert(1);
+}
+.error-message {
+  color: red;
+  font-size: 1rem !important;
+  font-weight: bold;
+  margin-top: 1rem;
+  text-align: center;
 }

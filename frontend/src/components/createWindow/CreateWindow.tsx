@@ -10,7 +10,6 @@ import clip from "../../assets/icons/clip.png";
 function CreateWindow() {
   const [imgUrl, setUrl] = React.useState(noImageIcon);
   const [image, setImage] = useState<File | null>(null);
-  const [localName, setName] = React.useState("");
   const [selectedMarker, setSelectedMarker] = useState<LatLngExpression | null>(null);
   const [message, setMessage] = React.useState("");
   const navigate = useNavigate();
@@ -18,10 +17,6 @@ function CreateWindow() {
   interface MapMarkersProps {
     selectedMarker: LatLngExpression | null;
     onMarkerChange: (marker: LatLngExpression | null) => void;
-  }
-
-  function handleSetName(e: any): void {
-    setName(e.target.value);
   }
 
   const [hasImageError, setHasImageError] = useState(false);
@@ -45,9 +40,10 @@ function CreateWindow() {
   // Submit Info
   async function runSubmit(event: any): Promise<void> {
     event.preventDefault();
-    if (!selectedMarker || !localName || !image) {
+    setMessage("");
+    if (!selectedMarker || !image) {
       // if there is no marker, image  or location name
-      alert("Please make sure that all fields are sastified");
+      setMessage("Please make sure you have a image and a location set.");
       return;
     }
     const localPack = {
@@ -75,7 +71,7 @@ function CreateWindow() {
       else {
         //create user cache/cookie
         //stores username as UserName and UserEmail
-        alert("Submition added");
+        setMessage("Submition complete");
         //returns home
       }
     } catch (error: any) {
@@ -124,6 +120,12 @@ function CreateWindow() {
 
   return (
     <>
+      <div className="text-rounds-container">
+        <p>
+          <strong>Upload an Image. Then click the location on the map to set the marker</strong>
+        </p>
+      </div>
+
       <div className="game-window-container">
         <div>
           <div className="image-rounds-container">
@@ -194,14 +196,10 @@ function CreateWindow() {
         </div>
       </div>
 
-      <button
-        className="submit-button"
-        onClick={() => {
-          runSubmit(imgUrl, xCoordinate, yCoordinate);
-        }}
-      >
+      <button className="submit-button" onClick={runSubmit}>
         SUBMIT
       </button>
+      <p className="error-message">{message}</p>
     </>
   );
 }
