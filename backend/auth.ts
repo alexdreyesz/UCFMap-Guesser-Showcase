@@ -77,11 +77,20 @@ router.post("/register", async (req: Request, res: express.Response): Promise<vo
 router.post("/login", (req: Request, res: express.Response, next) => {
   passport.authenticate("local", (err, user) => {
     if (err) return next(err);
-    if (!user) return res.json({ loggedIn: false });
+    if (!user) return res.json({
+      loggedIn: false,
+    });
 
     req.logIn(user, (err) => {
       if (err) return next(err);
-      return res.json({ loggedIn: true });
+      return res.json({
+        loggedIn: true,
+        user: {
+          userID: req.user.id,
+          email: req.user.email,
+          username: req.user.username
+        }
+      });
     });
   })(req, res, next);
 });

@@ -1,7 +1,7 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/header/Header";
 import "./Login.css";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [message, setMessage] = React.useState("");
@@ -36,18 +36,17 @@ function Login() {
         body: jsPack,
         headers: { "Content-Type": "application/json" },
       });
-      const reply = JSON.parse(await response.text()); // this should have the text
-      if (reply.success) {
-        // we may not have a user id, so maybe this needs to be a status check
-        setMessage("Looks like your username/password is incorrect!");
-      } //
-      else {
+      const data = await response.json(); // this should have the text
+      if (data.loggedIn) {
         //create user cache/cookie
         //stores username as UserName and UserEmail
-        const usr = { loggedin: reply.loggedIn };
-        localStorage.setItem("user_data", JSON.stringify(usr));
+        localStorage.setItem("user_data", JSON.stringify(data));
         //returns home
         navigate("/create");
+      } //
+      else {
+        // we may not have a user id, so maybe this needs to be a status check
+        setMessage("Looks like your username/password is incorrect!");
       }
     } catch (error: any) {
       alert(error.toString());
