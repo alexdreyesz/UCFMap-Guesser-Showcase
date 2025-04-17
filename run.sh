@@ -8,6 +8,7 @@ whoami
 # Make sure we're using the correct bashrc profile
 source ~/.bashrc
 node --version
+cd /home/ec2-user/deploy
 npm install
 npm run build:clean
 npm run build
