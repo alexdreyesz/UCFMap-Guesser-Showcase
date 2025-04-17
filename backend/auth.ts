@@ -86,6 +86,21 @@ router.post("/login", (req: Request, res: express.Response, next) => {
   })(req, res, next);
 });
 
+router.get("/check-login", (req: Request, res: express.Response) => {
+  if (req.isAuthenticated()) {
+    res.json({
+      loggedIn: true,
+      user: {
+        userID: req.user.id,
+        email: req.user.email,
+        username: req.user.username
+      }
+    });
+  } else {
+    res.json({ loggedIn: false });
+  }
+});
+
 // Logout current user
 router.post("/logout", (req: Request, res: express.Response, next) => {
   req.logout((err) => {
