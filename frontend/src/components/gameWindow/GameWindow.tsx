@@ -1,13 +1,10 @@
 // GameWindow.tsx
-import "./GameWindow.css";
-import SchoolMap from "../map/map";
-import React, { useRef, useEffect, useState } from "react";
-import L, { LatLngExpression, LatLng } from "leaflet";
-import { MapContainer, TileLayer, useMap, ZoomControl } from "react-leaflet";
+import L, { LatLngExpression } from "leaflet";
+import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
 import imagePlaceHolder from "../../assets/icons/no-image-icon.png";
-import { set } from "mongoose";
-import { ReturnOriginalZoom } from "../map/map"; // assuming file is map.tsx
-
+import { GameFinishModal } from "../gameFinishModal/GameFinishModal";
+import SchoolMap from "../map/map";
+import "./GameWindow.css";
 
 function GameWindow() {
   const [selectedMarker, setSelectedMarker] = useState<LatLngExpression | null>(null);
@@ -17,9 +14,12 @@ function GameWindow() {
   const [showResult, setShowResult] = useState(false);
   const [geoImage, setGeoImage] = React.useState(imagePlaceHolder);
   const [globalScore, setGlobalScore] = useState(0);
+  const [isFinishModalVisible, setIsFinishModalVisible] = useState(false);
   const [resetZoomTrigger, setResetZoomTrigger] = useState(false);
+  const [round, setRound] = useState(1);
+  const [usedTreasureIds, setUsedTreasureIds] = useState<string[]>([]); // Track used treasure IDs
 
-
+  const [isDisabled, setIsDisabled] = useState(false);
   interface Treasure {
     id?: string;
     location: {
@@ -29,12 +29,10 @@ function GameWindow() {
     imageURL: string;
     authorId: string;
   }
-
-  const [treasure, setTreasure] = useState<Treasure | null>(null);
   const [error, setError] = useState<string>("");
 
   // Fetch Random Treasure
-  const fetchRandomTreasure = async () => {
+  const fetchRandomTreasure = async (attempts: number = 3) => {
     try {
       const response = await fetch("/api/treasures/random");
 
@@ -43,23 +41,47 @@ function GameWindow() {
       }
 
       const data: Treasure = await response.json();
+      if (!data || !data.location || !data.imageURL || data.id === undefined) {
+        throw new Error("Invalid treasure data");
+      }
+      const treasureId = data.id;
+      if (usedTreasureIds.includes(treasureId) && attempts > 0) {
+        console.log("Treasure already used, fetching a new one...");
+        fetchRandomTreasure(attempts - 1);
+        return;
+      }
+      setUsedTreasureIds((prev) => [...prev, treasureId]); // Add the new treasure ID to the used list
 
       console.log("New treasure loaded:", data);
 
       setGeoImage(data.imageURL);
 
       setCorrectAnswer([data.location.latitude, data.location.longitude]);
-      
+
       console.log("Correct Answer: Fetch: " + correctAnswer);
     } catch (err: any) {
       setError(err.message || "Unexpected error");
     }
   };
 
-   // Fetch Random Treasure On Page Load
-   useEffect(() => {
-     fetchRandomTreasure();
-   }, []);
+  const resetGame = () => {
+    setSelectedMarker(null);
+    setCorrectAnswer(null);
+    setDistance(0);
+    setScore(0);
+    setGlobalScore(0);
+    setShowResult(false);
+    setGeoImage(imagePlaceHolder);
+    setIsFinishModalVisible(false);
+    setRound(1);
+    setUsedTreasureIds([]); // Reset used treasure IDs
+    fetchRandomTreasure();
+  };
+
+  // Fetch Random Treasure On Page Load
+  useEffect(() => {
+    fetchRandomTreasure();
+  }, []);
 
   // score formula
   function calculateScore(distanceMeters: number): number {
@@ -67,7 +89,7 @@ function GameWindow() {
     const decayFactor = 150;
     return Math.max(0, Math.round(maxScore * Math.exp(-distanceMeters / decayFactor)));
   }
-  
+
   function returnOriginalZoom() {
     setResetZoomTrigger(true);
     setTimeout(() => {
@@ -110,7 +132,7 @@ function GameWindow() {
     }
     /////////////////////////////////////////////////
     const calculatedDistance = userLatLng.distanceTo(correctLatLng);
-    
+
     setDistance(calculatedDistance);
 
     const calculatedScore = calculateScore(calculatedDistance);
@@ -125,14 +147,6 @@ function GameWindow() {
     });
 
     setShowResult(true);
-
-    setTimeout(() => {
-      setCorrectAnswer(null);
-      setSelectedMarker(null);
-      returnOriginalZoom();
-      setShowResult(false);
-      fetchRandomTreasure();
-    }, 3000);
   };
 
   const [scale, setScale] = useState(1);
@@ -149,7 +163,7 @@ function GameWindow() {
     setPosition({ x: 0, y: 0 }); // reset position when zooming out fully
   };
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown: MouseEventHandler = (e) => {
     if (scale <= 1) return;
     setIsDragging(true);
     dragStart.current = {
@@ -158,7 +172,7 @@ function GameWindow() {
     };
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove: MouseEventHandler = (e) => {
     if (!isDragging) return;
     setPosition({
       x: e.clientX - dragStart.current.x,
@@ -170,33 +184,45 @@ function GameWindow() {
     setIsDragging(false);
   };
 
-  const [round, setRound] = useState(1);
-
   function nextRound() {
     setRound((prev) => {
       if (prev === 3) {
-        setGlobalScore(0);
-        setScore(0);
-        setDistance(0);
-        return 1;
+        return 3;
       }
-
+      setCorrectAnswer(null);
+      setSelectedMarker(null);
+      returnOriginalZoom();
+      setShowResult(false);
+      fetchRandomTreasure();
       return prev + 1;
     });
   }
 
-  const [isDisabled, setIsDisabled] = useState(false);
-
   const handleButtonClick = () => {
     setIsDisabled(true);
     handleSubmit();
-    setTimeout(() => { setIsDisabled(false); nextRound();}, 3000);
+    if (round === 3) {
+      setIsFinishModalVisible(true);
+    }
+    setTimeout(() => {
+      setIsDisabled(false);
+      nextRound();
+    }, 3000);
   };
 
+  const isGameFinished = round === 3 && showResult;
 
   return (
     <>
       <div className="game-window-container">
+        <GameFinishModal
+          isVisible={isFinishModalVisible}
+          score={globalScore}
+          onPlayAgain={resetGame}
+          onClose={() => {
+            setIsFinishModalVisible(false);
+          }}
+        />
         <div>
           <div className="game-text-rounds-container">
             <p className={round === 1 ? "round-1 current-round" : "round-1"}>Round 1</p>
@@ -256,24 +282,33 @@ function GameWindow() {
         </div>
       </div>
 
-      <div className="game-botton-container">
-        <button
-          className="game-submit-button"
-          disabled={isDisabled}
-          onClick={handleButtonClick}
-        >
-          SUBMIT
-        </button>
+      {!isGameFinished && (
+        <div className="game-botton-container">
+          <button className="game-submit-button" disabled={isDisabled} onClick={handleButtonClick}>
+            SUBMIT
+          </button>
 
-        <div className="distance-result">
-          <p>
-            Distance: <strong>{(distance / 1000).toFixed(2)} km</strong>
-          </p>
-          <p>
-            Your Score: <strong>{score}</strong>
-          </p>
+          <div className="distance-result">
+            <p>
+              Distance: <strong>{(distance / 1000).toFixed(2)} km</strong>
+            </p>
+            <p>
+              Your Score: <strong>{score}</strong>
+            </p>
+          </div>
         </div>
-      </div>
+      )}
+      {isGameFinished && (
+        <div className="game-finish-container">
+          <h2>Game Finished!</h2>
+          <h3 className="game-finish-text">
+            Your Final Score: <strong>{globalScore}</strong>
+          </h3>
+          <button className="game-finish-button" onClick={resetGame}>
+            Play Again
+          </button>
+        </div>
+      )}
     </>
   );
 }

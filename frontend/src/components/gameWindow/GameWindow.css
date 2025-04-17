@@ -154,3 +154,26 @@
   bottom: 5px;
   right: 65px;
 }
+
+.game-finish-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: bold;
+  align-self: stretch;
+}
+
+.game-finish-button {
+  width: 19rem;
+  height: 3.5rem;
+
+  font-weight: bold;
+  color: white;
+
+  border-radius: 0.7rem;
+  border: 2px solid #fff;
+  background: #f4be0d;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
