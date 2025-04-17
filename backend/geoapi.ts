@@ -54,6 +54,22 @@ router.post("/create", upload.single('image'), async (req: express.Request, res:
   }
 });
 
+
+//get a random treasure
+router.get("/random", async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const treasure = await getRandomGeoQuestion();
+    if (!treasure) {
+      res.status(404).json({ error: "No treasures found" });
+      return;
+    }
+    res.status(200).json(treasure);
+  } catch (err) {
+    console.error("Error fetching random treasure: ", err);
+    res.status(500).json({ error: "Server error while fetching random treasure" });
+  }
+});
+
 //get a treasure by id
 router.get("/:treasureId", async (req: express.Request, res: express.Response): Promise<void> => {
   try {
@@ -82,21 +98,6 @@ router.get("/treasures", async (req: express.Request, res: express.Response): Pr
   } catch (err) {
     console.error("Error fetching geoquestions: ", err);
     res.status(500).json({ error: "Server error while fetching geoquestions" });
-  }
-});
-
-//get a random treasure
-router.get("/random", async (req: express.Request, res: express.Response): Promise<void> => {
-  try {
-    const treasure = await getRandomGeoQuestion();
-    if (!treasure) {
-      res.status(404).json({ error: "No treasures found" });
-      return;
-    }
-    res.status(200).json(treasure);
-  } catch (err) {
-    console.error("Error fetching random treasure: ", err);
-    res.status(500).json({ error: "Server error while fetching random treasure" });
   }
 });
 
