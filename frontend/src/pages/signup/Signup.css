@@ -70,6 +70,7 @@ grey: #f8f8f8
   justify-content: left;
   align-items: center;
   text-align: left;
+  font-size: small;
 }
 
 .signup-button {

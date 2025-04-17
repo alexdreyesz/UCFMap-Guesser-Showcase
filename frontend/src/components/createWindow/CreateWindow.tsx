@@ -102,7 +102,7 @@ function CreateWindow() {
       <div className="game-window-container">
         <div>
           <div className="image-rounds-container">
-            <p>UCF Location: Upload An Image</p>
+            <p>UCF Location Image Upload</p>
           </div>
 
           <div

@@ -8,14 +8,7 @@ function Login() {
   const [loginName, setLoginName] = React.useState("");
   const [loginPassword, setPassword] = React.useState("");
   const navigate = useNavigate();
-  /*
-    To-do,
-     add banner button functionality
-     edit api calls
-     add link to sign up
-     possible edit top text
 
-  */
   async function startLogin(event: any): Promise<void> {
     event.preventDefault();
     setMessage("");
@@ -42,7 +35,7 @@ function Login() {
         //stores username as UserName and UserEmail
         localStorage.setItem("user_data", JSON.stringify(data));
         //returns home
-        navigate("/create");
+        navigate("/");
       } //
       else {
         // we may not have a user id, so maybe this needs to be a status check
