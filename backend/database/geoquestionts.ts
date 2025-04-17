@@ -1,4 +1,6 @@
+import dotenv from "dotenv";
 import mongoose, { DeleteResult } from "mongoose";
+dotenv.config();
 
 export type UCFMapGeoQuestion = {
   id?: string;
@@ -9,7 +11,7 @@ export type UCFMapGeoQuestion = {
 
 //mongood model
 const GeoQuestion = mongoose.model(
-  "Treasures",
+  "Treasures" + process.env.DATABASE_COLLECTION_SUFFIX || "",
   new mongoose.Schema<UCFMapGeoQuestion>({
     location: {
       type: {
