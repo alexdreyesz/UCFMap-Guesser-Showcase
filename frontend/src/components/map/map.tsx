@@ -24,10 +24,12 @@ interface SchoolMapProps {
   onMarkerChange: (marker: LatLngExpression | null) => void;
   correctAnswer: LatLngExpression | null;
   showResult: boolean;
+  resetZoomTrigger?: boolean;
 }
 
-function SchoolMap({ selectedMarker, onMarkerChange, correctAnswer, showResult }: SchoolMapProps) {
+function SchoolMap({ selectedMarker, onMarkerChange, correctAnswer, showResult, resetZoomTrigger}: SchoolMapProps) {
   const [center, setCenter] = useState<[number, number]>([28.6024, -81.2001]);
+  const defaultZoom = 15;
 
   function AutoZoomOnResult() {
     const map = useMap();
@@ -64,6 +66,7 @@ function SchoolMap({ selectedMarker, onMarkerChange, correctAnswer, showResult }
       />
 
       <ZoomControl position="bottomright" />
+      <ReturnOriginalZoom center={center} zoom={defaultZoom} trigger={resetZoomTrigger || false} />
       <AutoZoomOnResult />
 
       <MapMarkers
@@ -74,6 +77,26 @@ function SchoolMap({ selectedMarker, onMarkerChange, correctAnswer, showResult }
       />
     </MapContainer>
   );
+}
+
+export function ReturnOriginalZoom({
+  center,
+  zoom,
+  trigger,
+}: {
+  center: LatLngExpression;
+  zoom: number;
+  trigger: boolean;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (trigger) {
+      map.setView(center, zoom);
+    }
+  }, [trigger, map, center, zoom]);
+
+  return null;
 }
 
 export default SchoolMap;

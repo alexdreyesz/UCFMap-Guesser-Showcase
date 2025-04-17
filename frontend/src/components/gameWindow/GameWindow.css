@@ -101,6 +101,11 @@
   background-color: #b68f03;
 }
 
+.game-submit-button:disabled {
+  background-color: #b68f03;
+  cursor: default;
+}
+
 .box-button-square {
   width: 8rem;
   height: 4rem;

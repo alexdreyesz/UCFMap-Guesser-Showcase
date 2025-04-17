@@ -1,9 +1,13 @@
 // GameWindow.tsx
 import "./GameWindow.css";
 import SchoolMap from "../map/map";
-import { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import L, { LatLngExpression, LatLng } from "leaflet";
-import geoImage from "../../assets/images/ucf-pegasus-mural.jpg";
+import { MapContainer, TileLayer, useMap, ZoomControl } from "react-leaflet";
+import imagePlaceHolder from "../../assets/icons/no-image-icon.png";
+import { set } from "mongoose";
+import { ReturnOriginalZoom } from "../map/map"; // assuming file is map.tsx
+
 
 function GameWindow() {
   const [selectedMarker, setSelectedMarker] = useState<LatLngExpression | null>(null);
@@ -11,6 +15,10 @@ function GameWindow() {
   const [distance, setDistance] = useState(0);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const [geoImage, setGeoImage] = React.useState(imagePlaceHolder);
+  const [globalScore, setGlobalScore] = useState(0);
+  const [resetZoomTrigger, setResetZoomTrigger] = useState(false);
+
 
   interface Treasure {
     id?: string;
@@ -22,25 +30,36 @@ function GameWindow() {
     authorId: string;
   }
 
-  useEffect(() => {
-    // async function loadTreasure() {
-    //   try {
-    //     const response = await fetch("http://localhost:80/api/treasure/random");
-    //     if (!response.ok) {
-    //       throw new Error("Network response was not ok");
-    //     }
-    //     const data = await response.json();
-    //     setCorrectAnswer([data.location.latitude, data.location.longitude]);
-    //     console.log("Correct answer:", data.location.latitude, data.location.longitude);
-    //   } catch (error) {
-    //     console.error("Error fetching correct answer:", error);
-    //   }
-    // }
+  const [treasure, setTreasure] = useState<Treasure | null>(null);
+  const [error, setError] = useState<string>("");
 
-    // loadTreasure();
-    //test
-    setCorrectAnswer([28.6024, -81.2001]);
-  }, []);
+  // Fetch Random Treasure
+  const fetchRandomTreasure = async () => {
+    try {
+      const response = await fetch("/api/treasures/random");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch treasure");
+      }
+
+      const data: Treasure = await response.json();
+
+      console.log("New treasure loaded:", data);
+
+      setGeoImage(data.imageURL);
+
+      setCorrectAnswer([data.location.latitude, data.location.longitude]);
+      
+      console.log("Correct Answer: Fetch: " + correctAnswer);
+    } catch (err: any) {
+      setError(err.message || "Unexpected error");
+    }
+  };
+
+   // Fetch Random Treasure On Page Load
+   useEffect(() => {
+     fetchRandomTreasure();
+   }, []);
 
   // score formula
   function calculateScore(distanceMeters: number): number {
@@ -48,8 +67,16 @@ function GameWindow() {
     const decayFactor = 150;
     return Math.max(0, Math.round(maxScore * Math.exp(-distanceMeters / decayFactor)));
   }
+  
+  function returnOriginalZoom() {
+    setResetZoomTrigger(true);
+    setTimeout(() => {
+      setResetZoomTrigger(false); // reset the flag after it's triggered
+    }, 1000);
+  }
 
   const handleSubmit = async () => {
+    console.log("Correct Answer: Handle: " + correctAnswer);
     if (!selectedMarker) {
       alert("Choose a spot on the map first.");
       return;
@@ -59,6 +86,8 @@ function GameWindow() {
       alert("Correct answer not loaded yet.");
       return;
     }
+
+    returnOriginalZoom();
 
     //convert to Leaflet objects////
     let userLatLng: L.LatLng;
@@ -81,36 +110,29 @@ function GameWindow() {
     }
     /////////////////////////////////////////////////
     const calculatedDistance = userLatLng.distanceTo(correctLatLng);
+    
     setDistance(calculatedDistance);
 
     const calculatedScore = calculateScore(calculatedDistance);
-    setScore(calculatedScore);
+
+    console.log(calculatedScore);
+
+    setGlobalScore((prevScore) => {
+      const updatedScore = prevScore + calculatedScore;
+      console.log("New score:", updatedScore);
+      setScore(updatedScore);
+      return updatedScore;
+    });
 
     setShowResult(true);
 
-    // Send to backend (optional)
-    const payload = {
-      latitude: userLatLng.lat,
-      longitude: userLatLng.lng,
-      userID: "", // add this if you track users
-    };
-
-    try {
-      const response = await fetch("http://localhost:80/api/guesses", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-      console.log("Guess submitted successfully:", data);
-
-      // 👇 load a new treasure after submitting a guess
+    setTimeout(() => {
+      setCorrectAnswer(null);
+      setSelectedMarker(null);
+      returnOriginalZoom();
+      setShowResult(false);
       fetchRandomTreasure();
-      setShowResult(false); // reset result display for next round
-    } catch (error) {
-      console.error("Error submitting guess:", error);
-    }
+    }, 3000);
   };
 
   const [scale, setScale] = useState(1);
@@ -151,38 +173,26 @@ function GameWindow() {
   const [round, setRound] = useState(1);
 
   function nextRound() {
-    setRound((prev) => (prev < 3 ? prev + 1 : 1));
-  }
-
-  const [treasure, setTreasure] = useState<Treasure | null>(null);
-  const [error, setError] = useState<string>("");
-
-  // Fetch Random Treasure
-  const fetchRandomTreasure = async () => {
-    try {
-      const response = await fetch("http://localhost:80/geoapi/treasure/random");
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch treasure");
+    setRound((prev) => {
+      if (prev === 3) {
+        setGlobalScore(0);
+        setScore(0);
+        setDistance(0);
+        return 1;
       }
 
-      console.log("Hello");
-      const data: Treasure = await response.json();
-      console.log("Hello I am Here");
-      console.log("Treasure image URL:", data.imageURL);
+      return prev + 1;
+    });
+  }
 
-      setTreasure(data);
-      setCorrectAnswer([data.location.latitude, data.location.longitude]);
-      console.log("New treasure loaded:", data);
-    } catch (err: any) {
-      setError(err.message || "Unexpected error");
-    }
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  const handleButtonClick = () => {
+    setIsDisabled(true);
+    handleSubmit();
+    setTimeout(() => { setIsDisabled(false); nextRound();}, 3000);
   };
 
-  // Fetch Random Treasure On Page Load
-  useEffect(() => {
-    fetchRandomTreasure();
-  }, []);
 
   return (
     <>
@@ -206,7 +216,7 @@ function GameWindow() {
           >
             <img
               className="geo-image"
-              src={treasure?.imageURL}
+              src={geoImage}
               draggable={false}
               onDragStart={(e) => e.preventDefault()}
               style={{
@@ -240,6 +250,7 @@ function GameWindow() {
               onMarkerChange={setSelectedMarker}
               correctAnswer={correctAnswer}
               showResult={showResult}
+              resetZoomTrigger={resetZoomTrigger}
             />
           </div>
         </div>
@@ -248,10 +259,8 @@ function GameWindow() {
       <div className="game-botton-container">
         <button
           className="game-submit-button"
-          onClick={() => {
-            handleSubmit();
-            nextRound();
-          }}
+          disabled={isDisabled}
+          onClick={handleButtonClick}
         >
           SUBMIT
         </button>
