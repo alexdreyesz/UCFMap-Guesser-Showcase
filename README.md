@@ -47,7 +47,7 @@ I was responsible for building the front-end and integrating the interactive map
 
 ## 🛠 Technologies Used  
 - **MongoDB** - Database  
-- **Express.js** - Derver Side Logic  
+- **Express.js** - Server Side Logic  
 - **React** - Front-End Development  
 - **Node.js** - Backend Runtime  
 - **Nodemon** - Local Development
