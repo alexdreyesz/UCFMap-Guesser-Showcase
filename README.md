@@ -7,6 +7,9 @@ I was responsible for building the front-end and integrating the interactive map
 🔗 **Original Repository (My Contributions):**  
 [https://github.com/EvanPartidas/UCF-Map](https://github.com/EvanPartidas/UCF-Map)
 
+🔗 **Live Demo:**  
+[https://ucfmap.evanpartidas.com/](https://ucfmap.evanpartidas.com/)
+
 <br>
 
 ## 🏠 Home  
@@ -54,8 +57,3 @@ I was responsible for building the front-end and integrating the interactive map
 - **Vite** - Fast Front-End Development And Bundling
 - **AWS Lightsail** - Deployment  
 - **Leaflet.js** - Interactive Map Integration
-
-<br>
-
-🔗 **Live Demo:**  
-[https://ucfmap.evanpartidas.com/](https://ucfmap.evanpartidas.com/)
