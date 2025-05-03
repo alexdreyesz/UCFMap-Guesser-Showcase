@@ -1,5 +1,5 @@
-# 🌍 Welcome to UCF Map Guessr Built with the MERN Stack  
-**MongoDB | Express.js | React | Node.js | Nodemon | Vite | AWS Lightsail | Leaflet.js**
+# 🌍 Welcome to UCF Map Guessr - An Interactive University Location Guess Website
+**MongoDB | Express.js | React | Node.js | Nodemon | Vite | AWS Lightsail | Leaflet.js (MERN Stack)**
 
 Hello! This is the showcase for the **UCF Map Guessr** project I recently helped develop.  
 I was responsible for building the front-end and integrating the interactive map using the **Leaflet API**.
