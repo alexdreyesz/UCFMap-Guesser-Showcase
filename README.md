@@ -1,37 +1,58 @@
-# Welcome To UCF Map Guessr Made With MERN Stack. MongoDB + Express.js + React + Node.js + Nodemon + AWS Lightsail + Leaflet 
+# 🌍 Welcome to UCF Map Guessr Built with the MERN Stack  
+**MongoDB | Express.js | React | Node.js | Nodemon | AWS Lightsail | Leaflet.js**
 
-Hello Here is the showcase for UCF Map Guessr Project I recently worked on. I worked made the front-end and worked handling the the Leaflet APi.
+Hello! This is the showcase for the **UCF Map Guessr** project I recently helped develop.  
+I was responsible for building the front-end and integrating the interactive map using the **Leaflet API**.
 
-## Home
-<div align="center"> 
-<img src="github/images/Home.png" height="300px" width="auto">
-<div>
+🔗 **Original Repository (My Contributions):**  
+[https://github.com/EvanPartidas/UCF-Map](https://github.com/EvanPartidas/UCF-Map)
 
-## Log In
-<div align="center"> 
-<img src="github/images/Log-In.png" height="300px" width="auto">
-<div>
-  
-## Sign Up
-<div align="center"> 
-<img src="github/images/Sign-Up.png" height="300px" width="auto">
-<div>
-  
-## Create A Guess
-<div align="center"> 
-<img src="github/images/Create-Guess.png" height="300px" width="auto">
-<div> 
-  
-## Play Now 
-<div align="center"> 
-<img src="github/images/Play-Now.png" height="300px" width="auto">
-<div>
+## 🏠 Home  
+<div align="center">  
+  <img src="github/images/Home.png" height="300px" width="auto" alt="Home Page Screenshot">  
+</div>
 
+## 🔐 Log In  
+<div align="center">  
+  <img src="github/images/Log-In.png" height="300px" width="auto" alt="Log In Screenshot">  
+</div>
 
-✨ Key Features:
+## 📝 Sign Up  
+<div align="center">  
+  <img src="github/images/Sign-Up.png" height="300px" width="auto" alt="Sign Up Screenshot">  
+</div>
 
-  Technologies Used
+## 📍 Create a Guess  
+<div align="center">  
+  <img src="github/images/Create-Guess.png" height="300px" width="auto" alt="Create a Guess Screenshot">  
+</div>
 
+## 🎮 Play Now  
+<div align="center">  
+  <img src="github/images/Play-Now.png" height="300px" width="auto" alt="Play Now Screenshot">  
+</div>
 
+<br>
 
-🔗 View Live Portfolio Demo: https://ucfmap.evanpartidas.com/
+## ✨ Key Features  
+- Interactive map gameplay using Leaflet.js  
+- User authentication (Sign up & Log in)  
+- Create and manage custom location-based challenges  
+- Real-time score tracking  
+- Responsive UI with React
+
+<br>
+
+## 🛠 Technologies Used  
+- **MongoDB** for database  
+- **Express.js** for server-side logic  
+- **React** for front-end development  
+- **Node.js** for backend runtime  
+- **Nodemon** for local development  
+- **AWS Lightsail** for deployment  
+- **Leaflet.js** for interactive map integration
+
+<br>
+
+🔗 **Live Demo:**  
+[https://ucfmap.evanpartidas.com/](https://ucfmap.evanpartidas.com/)
