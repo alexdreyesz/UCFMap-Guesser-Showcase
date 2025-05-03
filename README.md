@@ -1,11 +1,13 @@
 # 🌍 Welcome to UCF Map Guessr Built with the MERN Stack  
-**MongoDB | Express.js | React | Node.js | Nodemon | AWS Lightsail | Leaflet.js**
+**MongoDB | Express.js | React | Node.js | Nodemon | Vite | AWS Lightsail | Leaflet.js**
 
 Hello! This is the showcase for the **UCF Map Guessr** project I recently helped develop.  
 I was responsible for building the front-end and integrating the interactive map using the **Leaflet API**.
 
 🔗 **Original Repository (My Contributions):**  
 [https://github.com/EvanPartidas/UCF-Map](https://github.com/EvanPartidas/UCF-Map)
+
+<br>
 
 ## 🏠 Home  
 <div align="center">  
@@ -44,13 +46,14 @@ I was responsible for building the front-end and integrating the interactive map
 <br>
 
 ## 🛠 Technologies Used  
-- **MongoDB** for database  
-- **Express.js** for server-side logic  
-- **React** for front-end development  
-- **Node.js** for backend runtime  
-- **Nodemon** for local development  
-- **AWS Lightsail** for deployment  
-- **Leaflet.js** for interactive map integration
+- **MongoDB** - Database  
+- **Express.js** - Derver Side Logic  
+- **React** - Front-End Development  
+- **Node.js** - Backend Runtime  
+- **Nodemon** - Local Development
+- **Vite** - Fast Front-End Development And Bundling
+- **AWS Lightsail** - Deployment  
+- **Leaflet.js** - Interactive Map Integration
 
 <br>
 
