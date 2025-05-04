@@ -57,3 +57,14 @@ I was responsible for building the front-end and integrating the interactive map
 - **Vite** - Fast Front-End Development And Bundling
 - **AWS Lightsail** - Deployment  
 - **Leaflet.js** - Interactive Map Integration
+
+<br>
+
+🤝Contributors:
+● Travis Grant
+● Alex Reyes
+● Jairyn Cole
+● Jesus Molina
+● Evan Partidas
+● Diego Santos
+● Joshua Browen
