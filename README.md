@@ -61,10 +61,10 @@ I was responsible for building the front-end and integrating the interactive map
 <br>
 
 🤝Contributors:
-● Travis Grant
-● Alex Reyes
-● Jairyn Cole
-● Jesus Molina
-● Evan Partidas
-● Diego Santos
-● Joshua Browen
+- Travis Grant
+- Alex Reyes
+- Jairyn Cole
+- Jesus Molina
+- Evan Partidas
+- Diego Santos
+- Joshua Browen
