@@ -1,4 +1,4 @@
-# 🌍 Welcome to UCF Map Guessr - An Interactive University Location Guess Website
+# 🌍 Welcome to UCF Map Guessr - An Interactive University Location Guess Game App
 **MongoDB | Express.js | React | Node.js | Nodemon | Vite | AWS Lightsail | Leaflet.js (MERN Stack)**
 
 Hello! This is the showcase for the **UCF Map Guessr** project I recently helped develop.  
